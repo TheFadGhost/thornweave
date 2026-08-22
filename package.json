@@ -1,0 +1,17 @@
+{
+  "name": "thornweave",
+  "version": "0.1.0",
+  "description": "An interactive fiction engine with a writer-first authoring format, a reading player, and analysis tools.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "thornweave": "bin/thornweave.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test tests/",
+    "lint": "node bin/thornweave.js lint stories/*.thorn"
+  }
+}

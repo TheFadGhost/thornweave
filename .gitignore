@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+out/
+coverage/
+exports/
+saves/
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+.playwright/
