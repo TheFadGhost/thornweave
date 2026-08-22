@@ -1,0 +1,138 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: var(--fs-2);
+  line-height: 1.5;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.prose {
+  font-family: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  font-size: var(--reader-font-size);
+  line-height: var(--reader-line-height);
+  max-width: min(66ch, 100% - 48px);
+  margin-inline: auto;
+  overflow-wrap: break-word;
+  hyphens: none;
+}
+
+.prose p {
+  margin-bottom: 0.95em;
+}
+
+.prose em {
+  font-style: italic;
+}
+
+.prose strong {
+  font-weight: 600;
+}
+
+.prose h1,
+.prose h2,
+.prose h3 {
+  font-weight: 600;
+  line-height: 1.25;
+  margin: var(--sp-6) 0 var(--sp-3);
+}
+
+.prose h1:first-child,
+.prose h2:first-child,
+.prose h3:first-child {
+  margin-top: 0;
+}
+
+.prose h1 {
+  font-size: var(--fs-5);
+}
+
+.prose h2 {
+  font-size: var(--fs-4);
+}
+
+.prose h3 {
+  font-size: var(--fs-3);
+}
+
+.prose a {
+  color: var(--link);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.prose a:visited {
+  color: var(--link-visited);
+}
+
+.scene-break {
+  border: 0;
+  text-align: center;
+  color: var(--ink-muted);
+  letter-spacing: 0.25em;
+  margin-block: var(--sp-5);
+}
+
+.scene-break:empty::before,
+hr.scene-break::before {
+  content: "\00B7\00A0\00B7\00A0\00B7";
+  letter-spacing: normal;
+}
+
+:focus-visible {
+  outline: var(--focus-width) solid var(--focus);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

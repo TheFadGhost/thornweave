@@ -1,0 +1,116 @@
+:root {
+  color-scheme: light;
+
+  --bg: #fbfaf7;
+  --surface: #f1ede4;
+  --surface-2: #e7e1d3;
+  --ink: #26221b;
+  --ink-muted: #5d564a;
+  --ink-faint: #8b8374;
+  --link: #96371c;
+  --link-visited: #6e2a12;
+  --focus: #0f6b4f;
+  --border: #d9d2c2;
+  --danger: #a12622;
+  --success: #256d46;
+  --countdown: #8a5a10;
+
+  --choice-hover: var(--surface-2);
+
+  --border-width: 1px;
+  --focus-width: 2px;
+
+  --fs-0: 12px;
+  --fs-1: 14.4px;
+  --fs-2: 17.3px;
+  --fs-3: 20.7px;
+  --fs-4: 24.9px;
+  --fs-5: 30px;
+
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+
+  --radius-1: 4px;
+  --radius-2: 8px;
+
+  --reader-font-size: 19px;
+  --reader-line-height: 1.65;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #fbfaf7;
+  --surface: #f1ede4;
+  --surface-2: #e7e1d3;
+  --ink: #26221b;
+  --ink-muted: #5d564a;
+  --ink-faint: #8b8374;
+  --link: #96371c;
+  --link-visited: #6e2a12;
+  --focus: #0f6b4f;
+  --border: #d9d2c2;
+  --danger: #a12622;
+  --success: #256d46;
+  --countdown: #8a5a10;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #191714;
+  --surface: #211e1a;
+  --surface-2: #2a2620;
+  --ink: #e9e3d7;
+  --ink-muted: #a99f8e;
+  --ink-faint: #736b5d;
+  --link: #eda06f;
+  --link-visited: #c98d64;
+  --focus: #82d0ab;
+  --border: #3a352c;
+  --danger: #e58a86;
+  --success: #8ccfa8;
+  --countdown: #d9b25e;
+}
+
+[data-theme="sepia"] {
+  color-scheme: light;
+
+  --bg: #f3e9d6;
+  --surface: #eadfc6;
+  --surface-2: #e0d2b4;
+  --ink: #3b3223;
+  --ink-muted: #6d5e47;
+  --ink-faint: #98876c;
+  --link: #8c4318;
+  --link-visited: #693310;
+  --focus: #11594a;
+  --border: #d5c5a4;
+  --danger: #8f2521;
+  --success: #215c3c;
+  --countdown: #7d5210;
+}
+
+[data-theme="contrast"] {
+  color-scheme: light;
+
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #efefef;
+  --ink: #000000;
+  --ink-muted: #333333;
+  --ink-faint: #555555;
+  --link: #00304f;
+  --link-visited: #00263d;
+  --focus: #b45309;
+  --border: #000000;
+  --danger: #a10000;
+  --success: #005e2f;
+  --countdown: #8a5a00;
+}
