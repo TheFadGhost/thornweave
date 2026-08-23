@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thornweave</title>
+<script>
+(function () {
+  var t = null;
+  try { t = window.localStorage.getItem('tw.theme'); } catch (e) { t = null; }
+  if (t !== 'light' && t !== 'dark' && t !== 'sepia' && t !== 'contrast') {
+    t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.dataset.theme = t;
+}());
+</script>
+<link rel="stylesheet" href="/player/styles/tokens.css">
+<link rel="stylesheet" href="/player/styles/base.css">
+<link rel="stylesheet" href="/player/styles/components.css">
+</head>
+<body data-sse="1">
+<div id="app" class="app">
+  <div class="layout">
+    <main id="reader">
+    </main>
+    <aside class="status-panel" aria-label="Status and saves">
+      <details id="status-details">
+        <summary>Status</summary>
+        <div class="status-body" id="status-body"></div>
+      </details>
+    </aside>
+  </div>
+  <section class="transcript-drawer" id="transcript-drawer" style="display:none" aria-label="Transcript">
+    <div class="drawer-toolbar">
+      <h2>Transcript</h2>
+      <div class="drawer-actions">
+        <button class="btn" id="tr-copy" type="button">Copy</button>
+        <button class="btn" id="tr-download" type="button">Download .txt</button>
+        <button class="btn" id="tr-close" type="button">Close</button>
+      </div>
+    </div>
+    <ol class="transcript-list" id="transcript-list"></ol>
+  </section>
+  <section class="transcript-drawer" id="settings-drawer" style="display:none" aria-label="Settings">
+    <div class="drawer-toolbar">
+      <h2>Settings</h2>
+      <div class="drawer-actions">
+        <button class="btn" id="set-close" type="button">Close</button>
+      </div>
+    </div>
+    <form class="transcript-list" id="settings-form">
+      <p class="transcript-entry"><label for="set-theme">Theme </label>
+        <select id="set-theme">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="sepia">Sepia</option>
+          <option value="contrast">High contrast</option>
+        </select>
+      </p>
+      <p class="transcript-entry"><label for="set-fontsize">Text size </label>
+        <input type="range" id="set-fontsize" min="16" max="24" step="1" value="19">
+        <output id="out-fontsize" for="set-fontsize">19px</output>
+      </p>
+      <p class="transcript-entry"><label for="set-lineheight">Line height </label>
+        <input type="range" id="set-lineheight" min="1.4" max="2" step="0.05" value="1.65">
+        <output id="out-lineheight" for="set-lineheight">1.65</output>
+      </p>
+      <p class="transcript-entry">
+        <label><input type="checkbox" id="set-reveal"> Fade in new paragraphs</label>
+      </p>
+      <p class="transcript-entry"><label for="set-timers">Timers </label>
+        <select id="set-timers">
+          <option value="off">Off — timed choices wait</option>
+          <option value="normal">Normal</option>
+          <option value="long">Long — double duration</option>
+        </select>
+      </p>
+      <p class="transcript-entry">Keys: 1–9 choose · B step back · T transcript · G settings · S status · Esc close.</p>
+    </form>
+  </section>
+  <div id="live-region" class="sr-only" role="status" aria-live="polite"></div>
+</div>
+<noscript><p class="empty-state">This story needs JavaScript to play.</p></noscript>
+<script type="module" src="/player/app.js"></script>
+</body>
+</html>

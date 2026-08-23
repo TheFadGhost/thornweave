@@ -1,0 +1,71 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Thornweave (Thornmark)",
+  "scopeName": "source.thornmark",
+  "patterns": [
+    { "include": "#frontmatter" },
+    { "include": "#header" },
+    { "include": "#comment" },
+    { "include": "#statement" },
+    { "include": "#choice" },
+    { "include": "#scenebreak" },
+    { "include": "#logic" },
+    { "include": "#link" },
+    { "include": "#emphasis" }
+  ],
+  "repository": {
+    "frontmatter": {
+      "begin": "^---\\s*$",
+      "end": "^---\\s*$",
+      "name": "meta.thornmark.frontmatter",
+      "patterns": [
+        { "match": "^\\s*([A-Za-z_-]+)\\s*:", "name": "entity.other.attribute-name.thornmark" },
+        { "match": "^\\s+([A-Za-z_][\\w]*)\\s*[=:]\\s*(.*)$", "captures": { "1": "variable.other.thornmark", "2": "constant.other.thornmark" } }
+      ]
+    },
+    "header": {
+      "match": "^==+\\s*(.+?)\\s*(\\[[^\\]]*\\])?\\s*(\\([^)]*\\))?\\s*=*\\s*$",
+      "name": "markup.heading.thornmark",
+      "captures": {
+        "1": "entity.name.section.thornmark",
+        "2": "storage.modifier.thornmark",
+        "3": "variable.parameter.thornmark"
+      }
+    },
+    "comment": { "match": "^\\s*%%.*$", "name": "comment.line.thornmark" },
+    "statement": {
+      "match": "^\\s*~.*$",
+      "name": "meta.thornmark.statement",
+      "captures": { "0": "keyword.control.statement.thornmark" }
+    },
+    "choice": {
+      "match": "^\\s*\\*.*$",
+      "name": "markup.list.thornmark"
+    },
+    "scenebreak": { "match": "^\\s*(· · ·|\\*\\*\\*)\\s*$", "name": "meta.separator.thornmark" },
+    "logic": {
+      "begin": "\\{\\{",
+      "end": "\\}\\}",
+      "name": "meta.thornmark.logic",
+      "patterns": [
+        { "match": "\\b(if|elif|else|end|for|in|include)\\b", "name": "keyword.control.thornmark" },
+        { "match": "\"(?:[^\"\\\\]|\\\\.)*\"", "name": "string.quoted.double.thornmark" },
+        { "match": "\\b(true|false)\\b", "name": "constant.language.thornmark" },
+        { "match": "\\b(and|or|not)\\b", "name": "keyword.operator.word.thornmark" },
+        { "match": "\\b(visited|seen|has|count|inv|turns|random|pick|range|len|upper|lower|floor|ceil|abs|min|max|str|num|bool)\\b", "name": "support.function.builtin.thornmark" },
+        { "match": "\\b\\d+(?:\\.\\d+)?\\b", "name": "constant.numeric.thornmark" }
+      ]
+    },
+    "link": {
+      "match": "\\[\\[([^\\]]*)\\]\\]",
+      "name": "markup.underline.link.thornmark",
+      "captures": { "1": "string.unquoted.thornmark" }
+    },
+    "emphasis": {
+      "patterns": [
+        { "match": "\\*\\*[^*]+\\*\\*", "name": "markup.bold.thornmark" },
+        { "match": "(?<!\\*)\\*[^*\\s][^*]*\\*(?!\\*)", "name": "markup.italic.thornmark" }
+      ]
+    }
+  }
+}

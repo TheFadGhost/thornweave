@@ -9,7 +9,7 @@
  * choice identity is ordinal-based, so reordering is a content change.
  */
 
-import { createHash } from 'node:crypto';
+import { sha1Hex } from '../state/sha1.js';
 
 const STRIP = new Set(['pos', 'line', 'col', 'endCol', 'words']);
 
@@ -43,5 +43,5 @@ function canonicalize(value) {
  * @returns {string} 40-char lowercase sha1 hex
  */
 export function storyFingerprint(story) {
-  return createHash('sha1').update(canonicalize(strip(story))).digest('hex');
+  return sha1Hex(canonicalize(strip(story)));
 }

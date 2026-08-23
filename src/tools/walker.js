@@ -10,7 +10,22 @@ export function walkOnce(engine, seed, opts = {}) {
   const maxSteps = opts.maxSteps ?? 400;
   const rng = mulberry32(seed);
   const state = engine.newGame(seed ^ 0x9e3779b9);
-  let render = engine.start(state);
+  let render;
+  try {
+    render = engine.start(state);
+  } catch (e) {
+    return {
+      ok: false,
+      outcome: 'fault',
+      passage: state.current || '?',
+      message: e.message,
+      faultKind: e.fault ?? 'runtime',
+      pos: e.pos ?? null,
+      steps: 0,
+      visitedPassages: new Set(),
+      path: [],
+    };
+  }
   const visitedPassages = new Set([state.current]);
   const path = [state.current];
   let steps = 0;

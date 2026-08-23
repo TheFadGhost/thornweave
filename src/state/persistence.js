@@ -3,45 +3,15 @@
  * bounded rewind stack with spoiler-free undo semantics.
  */
 import { serializeState, deserializeState, fault } from './model.js';
-import { readFileSync, writeFileSync, unlinkSync, readdirSync, mkdirSync } from 'node:fs';
-import { join } from 'node:path';
 
 export const REWIND_CAP = 50;
 export const SLOT_COUNT = 6;
 
 /**
  * Storage backend interface: { get(key) -> string|null, set(key, val), delete(key), keys() -> string[] }.
- * Node adapter roots at a directory; browser adapter wraps localStorage.
+ * The Node adapter lives in storage.node.js; the player passes a
+ * localStorage-backed adapter with the same four methods.
  */
-export function nodeStorage(dir) {
-  return {
-    get(key) {
-      try {
-        return readFileSync(join(dir, safeKey(key)), 'utf8');
-      } catch {
-        return null;
-      }
-    },
-    set(key, val) {
-      mkdirSync(dir, { recursive: true });
-      writeFileSync(join(dir, safeKey(key)), val, 'utf8');
-    },
-    delete(key) {
-      try { unlinkSync(join(dir, safeKey(key))); } catch {}
-    },
-    keys() {
-      try {
-        return readdirSync(dir).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5));
-      } catch {
-        return [];
-      }
-    },
-  };
-}
-function safeKey(k) {
-  if (!/^[A-Za-z0-9_-]{1,64}$/.test(k)) throw fault('internal', `bad save key '${k}'`);
-  return `${k}.json`;
-}
 
 export class SaveManager {
   constructor(storage) {
