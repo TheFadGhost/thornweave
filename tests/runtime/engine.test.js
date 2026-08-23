@@ -5,10 +5,10 @@ import { Engine } from '../../src/runtime/engine.js';
 import {
   serializeState,
   deserializeState,
-  stateHash,
   deepClone,
   stateMatchesStory,
 } from '../../src/state/model.js';
+import { stateHash } from '../../src/state/hash.node.js';
 
 function ready(src) {
   const c = compile(src, 't.thorn');

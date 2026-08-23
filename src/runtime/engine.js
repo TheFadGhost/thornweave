@@ -40,6 +40,7 @@ export class Engine {
     const passage = this.story.passages[name];
     if (!passage) throw fault('internal', `passage '${name}' does not exist`);
     if (!opts.dry) {
+      state.current = name;
       state.visited[name] = (state.visited[name] ?? 0) + 1;
       if (state.turn === 0) state.turn = 1;
     }
@@ -329,7 +330,7 @@ class Walk {
       case 'include': this.include(n); break;
       case 'link': {
         const entry = this.registerChoice(n, 'inline');
-        if (entry) this.addRun({ t: 'link', choice: entry.i });
+        if (entry) this.addRun({ t: 'link', choice: entry.i, label: entry.label });
         break;
       }
       case 'choice': {

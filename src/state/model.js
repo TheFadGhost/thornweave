@@ -1,9 +1,8 @@
 /**
- * @file State model contract (SPEC §6, §8, §9). The serialized form is the
- * wire format for saves, rewind snapshots, and determinism hashes.
+ * @file State model contract (SPEC §6, §8, §9). Pure JS — safe in browsers.
+ * The serialized form is the wire format for saves, rewind snapshots, and
+ * determinism hashes (hashing helper lives in hash.node.js for Node tests).
  */
-import { createHash } from 'node:crypto';
-import { FORMAT_VERSION } from '../syntax/ast.js';
 
 /**
  * Runtime state. `vars` holds values; `vtypes` their declared types.
@@ -65,11 +64,6 @@ export function deserializeState(json) {
 /** Binds a save to a story; mismatch must be rejected cleanly by loaders. */
 export function stateMatchesStory(st, storyHash) {
   return st.storyHash === storyHash;
-}
-
-/** Deterministic hash of full state (SPEC §9 tests). */
-export function stateHash(st) {
-  return createHash('sha256').update(serializeState(st)).digest('hex');
 }
 
 export function deepClone(st) {

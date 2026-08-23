@@ -34,5 +34,5 @@ export async function compileFile(path) {
     }
     throw e;
   }
-  return compile(source, path);
+  return { ...compile(source, path), sourceText: source };
 }

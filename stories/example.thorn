@@ -1,0 +1,24 @@
+---
+title: The Two Coins
+author: You
+start: Road
+vars:
+  coins: 2
+---
+
+== Road ==
+You have {{coins}} coins and a long road behind you.
+
+{{if coins >= 2}}
+The tollkeeper nods you toward the bridge.
+[[Pay the toll -> Bridge]]
+{{else}}
+The tollkeeper shakes her head.
+[[Look for another way -> Shore]]
+{{end}}
+
+== Bridge [ending] ==
+The far bank opens ahead of you. The road is yours.
+
+== Shore [ending] ==
+You follow the water until it forgets your name.
