@@ -139,18 +139,6 @@ function construct(inner, openOff, text, posAt, collector) {
     }
     return { node: { k: 'include', target, args: null, pos } };
   }
-  if ((m = /^([A-Za-z_][A-Za-z0-9_]*)\s*\(([\s\S]*)\)$/.exec(trimmed))) {
-    const argParts = splitTop(m[2], [',']);
-    const args = [];
-    if (!(argParts.length === 1 && argParts[0].trim() === '')) {
-      for (const part of argParts) {
-        const e = exprOf(part.trim(), pos, collector);
-        if (!e) return { node: null };
-        args.push(e);
-      }
-    }
-    return { node: { k: 'include', target: m[1], args, pos } };
-  }
   const e = exprOf(trimmed, pos, collector);
   if (!e) return { node: null };
   return { node: { k: 'interp', expr: e, pos } };

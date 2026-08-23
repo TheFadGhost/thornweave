@@ -4,7 +4,7 @@
 import { tokenizeExpr } from './lexer.js';
 import { ExprParser } from './exprparser.js';
 import { scanInline, parseBulletLine, parseStatement } from './inline.js';
-import { linkId, FORMAT_VERSION } from './ast.js';
+import { linkId, FORMAT_VERSION, resolveStart } from './ast.js';
 
 const IDENT_RE = /^[A-Za-z_][A-Za-z0-9_]*$/;
 
@@ -49,10 +49,7 @@ export function parseStory(sourceText, fileName = 'story.thorn') {
     idx = parsePassage(lines, idx, passages, order, collector);
   }
 
-  if (!meta.start) {
-    const tagged = order.find((n) => passages[n]?.tags.includes('start'));
-    if (tagged) meta.start = tagged;
-  }
+  meta.start = meta.start || resolveStart({ meta, passages, order });
   sortDiags(diags);
   const story = {
     formatVersion: FORMAT_VERSION,
@@ -183,26 +180,32 @@ function literalOf(e) {
 function parsePassage(lines, idx, passages, order, collector) {
   const headerLineNo = idx + 1;
   let rest = /^==+(.*)$/.exec(lines[idx])[1];
-  rest = rest.replace(/=+\s*$/, '');
   let params = [];
-  const pm = /\(([^()]*)\)\s*$/.exec(rest);
-  if (pm) {
-    params = pm[1].split(',').map((p) => p.trim()).filter(Boolean);
-    for (const p of params) {
-      if (!IDENT_RE.test(p)) {
-        collector.add('error', 'TW020', `macro parameter '${p}' must be a name`, { line: headerLineNo, col: 4 }, { help: 'example: == Wound(level) ==' });
-      }
-    }
-    if (new Set(params).size !== params.length) {
-      collector.add('error', 'TW008', `duplicate macro parameter in passage header`, { line: headerLineNo, col: 4 });
-    }
-    rest = rest.slice(0, pm.index);
-  }
   let tags = [];
-  const tm = /\[([^\[\]]*)\]\s*$/.exec(rest);
-  if (tm) {
-    tags = tm[1].split(/\s+/).filter(Boolean);
-    rest = rest.slice(0, tm.index);
+  for (let guard = 0; guard < 6; guard++) {
+    let peeled = false;
+    let m;
+    if ((m = /\(([^()]*)\)\s*$/.exec(rest))) {
+      params = m[1].split(',').map((p) => p.trim()).filter(Boolean);
+      rest = rest.slice(0, m.index);
+      peeled = true;
+    } else if ((m = /\[([^\[\]]*)\]\s*$/.exec(rest))) {
+      tags = m[1].split(/\s+/).filter(Boolean);
+      rest = rest.slice(0, m.index);
+      peeled = true;
+    } else if ((m = /\s*=+\s*$/.exec(rest))) {
+      rest = rest.slice(0, m.index);
+      peeled = true;
+    }
+    if (!peeled) break;
+  }
+  for (const p of params) {
+    if (!IDENT_RE.test(p)) {
+      collector.add('error', 'TW020', `macro parameter '${p}' must be a name`, { line: headerLineNo, col: 4 }, { help: 'example: == Wound(level) ==' });
+    }
+  }
+  if (new Set(params).size !== params.length) {
+    collector.add('error', 'TW020', 'duplicate macro parameter in passage header', { line: headerLineNo, col: 4 });
   }
   const name = rest.trim();
   if (name === '') {

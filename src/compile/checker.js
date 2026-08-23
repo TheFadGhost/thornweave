@@ -17,7 +17,7 @@
  */
 
 import { BUILTINS } from '../runtime/builtins.js';
-import { LOOP_CAP } from '../syntax/ast.js';
+import { LOOP_CAP, resolveStart } from '../syntax/ast.js';
 import { sortDiagnostics } from './diagnostics.js';
 
 const LITERAL_TYPE = { num: 'number', str: 'string', bool: 'boolean', list: 'list' };
@@ -100,11 +100,11 @@ export function checkStory(story, _sourceText, fileName = 'story.thorn') {
   }
 
   // ---- TW010: start passage ----------------------------------------------
-  const startName = story.meta?.start ?? '';
+  const startName = resolveStart(story);
   let startOk = false;
   if (!startName || !nameSet.has(startName)) {
     const msg = !startName
-      ? "no start passage: frontmatter 'start' is missing or empty"
+      ? 'no start passage: the story has no passages'
       : `start passage '${startName}' does not exist`;
     push('error', 'TW010', msg, 1, 1, undefined,
       "set 'start: Name' in the frontmatter or tag a passage with '[start]'");
@@ -303,7 +303,7 @@ export function checkStory(story, _sourceText, fileName = 'story.thorn') {
 
   // ---- TW017: naming-convention lint ---------------------------------------
   {
-    const judged = names.filter((n) => n !== '');
+    const judged = names.filter((n) => n !== '' && (passages[n].params?.length ?? 0) === 0);
     const violators = judged.filter((n) => !NAME_CONVENTION.test(n));
     if (violators.length > 0 && violators.length <= judged.length * 0.4) {
       const pct = Math.round(((judged.length - violators.length) / judged.length) * 100);

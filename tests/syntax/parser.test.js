@@ -233,16 +233,18 @@ test('paragraph collapsing rules', () => {
   assert.equal(ps[1].kids[0].v, 'four');
 });
 
-test('macro parameters and macro calls', () => {
+test('macro-style calls parse as call expressions resolved at runtime', () => {
   const src = ['== Wound(level, who) ==', 'A wound of {{level}} on {{who}}.', '', '== Scene ==', '{{Wound(2, "keeper")}}'].join('\n');
   const { story, diagnostics } = parseStory(src);
   assert.deepEqual(codes(diagnostics), []);
   assert.deepEqual(story.passages.Wound.params, ['level', 'who']);
   const scene = story.passages.Scene;
-  const inc = (function find(ns) { for (const n of ns) { if (n.k === 'include') return n; if (n.kids) { const r = find(n.kids); if (r) return r; } } })(scene.nodes);
-  assert.equal(inc.target, 'Wound');
-  assert.equal(inc.args.length, 2);
-  assert.equal(inc.args[1].v, 'keeper');
+  let call = null;
+  (function find(ns) { for (const n of ns) { if (n.k === 'interp' && n.expr?.t === 'call') call = n.expr; if (n.kids) find(n.kids); } })(scene.nodes);
+  assert.ok(call, 'call expression present');
+  assert.equal(call.name, 'Wound');
+  assert.equal(call.args.length, 2);
+  assert.equal(call.args[1].v, 'keeper');
 });
 
 test('parser recovers across broken passages', () => {

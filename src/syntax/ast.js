@@ -81,3 +81,13 @@ export function linkId(passageName, ordinal) {
 export const FORMAT_VERSION = 1;
 export const LOOP_CAP = 10000;
 export const INCLUDE_DEPTH_CAP = 32;
+
+/** Shared start-resolution rule (SPEC §1.1): explicit > [start] tag > first non-macro passage.
+ *  An explicitly named but missing start is returned as-is so diagnostics can name it. */
+export function resolveStart(story) {
+  const named = story.meta?.start;
+  if (named) return named;
+  const tagged = (story.order ?? []).find((n) => story.passages[n]?.tags.includes('start'));
+  if (tagged) return tagged;
+  return (story.order ?? []).find((n) => (story.passages[n]?.params.length ?? 0) === 0) ?? '';
+}

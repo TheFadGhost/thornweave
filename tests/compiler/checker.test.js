@@ -591,13 +591,20 @@ test('TW008 macro called with the wrong argument count', () => {
 // TW010 / TW013 / TW009 / TW016
 // ---------------------------------------------------------------------------
 
-test('TW010 when frontmatter start is empty or missing', () => {
-  const st = storyOf([passage('Orphan', { line: 2 })]);
+test('TW010 when the story has no passages at all', () => {
+  const st = storyOf([]);
   const ds = checkStory(st, '');
   const d = oneOf(ds, 'TW010');
   assert.equal(d.severity, 'error');
-  assert.ok(d.message.includes("frontmatter 'start' is missing or empty"));
-  assert.equal(codesOf(ds, 'TW003').length, 0);
+});
+
+test('TW010 when frontmatter start names a missing passage but a default exists', () => {
+  const st = storyOf([passage('Orphan', { line: 2 })]);
+  st.meta.start = 'Ghost';
+  const ds = checkStory(st, '');
+  const d = oneOf(ds, 'TW010');
+  assert.equal(d.severity, 'error');
+  assert.ok(d.message.includes("'Ghost' does not exist"));
 });
 
 test('TW010 when start names a missing passage', () => {
