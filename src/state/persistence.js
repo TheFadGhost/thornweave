@@ -2,7 +2,7 @@
  * @file Persistence (SPEC §8, PLAN feature 4): pluggable save slots,
  * bounded rewind stack with spoiler-free undo semantics.
  */
-import { serializeState, deserializeState, fault } from './model.js';
+import { serializeState, deserializeState, stateMatchesStory, fault } from './model.js';
 
 export const REWIND_CAP = 50;
 export const SLOT_COUNT = 6;
@@ -36,8 +36,19 @@ export class SaveManager {
     } catch {
       throw fault('save-corrupt', `slot '${slot}' is corrupt`);
     }
-    const st = deserializeState(JSON.stringify(rec.state));
-    if (expectedStoryHash && st.storyHash !== expectedStoryHash) {
+    if (!rec || typeof rec !== 'object' || !rec.state) {
+      throw fault('save-corrupt', `slot '${slot}' is missing its state payload`);
+    }
+    let st;
+    try {
+      st = deserializeState(JSON.stringify(rec.state));
+    } catch (e) {
+      if (e?.fault === 'save-corrupt' || e?.fault === 'save-version') {
+        throw fault(e.fault, `slot '${slot}': ${e.message}`);
+      }
+      throw e;
+    }
+    if (!stateMatchesStory(st, expectedStoryHash ?? st.storyHash)) {
       throw fault('story-mismatch', 'this save belongs to a different version of the story');
     }
     return { when: rec.when, label: rec.label ?? '', state: st };

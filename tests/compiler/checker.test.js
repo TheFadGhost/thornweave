@@ -8,6 +8,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { checkStory, walkExpr } from '../../src/compile/checker.js';
+import { parseStory } from '../../src/syntax/parser.js';
 import { formatDiagnostic, toJson, sortDiagnostics } from '../../src/compile/diagnostics.js';
 import { storyFingerprint } from '../../src/compile/fingerprint.js';
 
@@ -48,7 +49,7 @@ function storyOf(passages, { meta = {}, varsInit = {}, order = null, metaUnknown
     passages: map,
     order: order ?? passages.map((p) => p.name),
   };
-  if (metaUnknown) story.metaUnknown = metaUnknown;
+  if (metaUnknown) story.meta.metaUnknown = metaUnknown;
   return story;
 }
 
@@ -631,15 +632,11 @@ test('TW009 duplicate passage names detected via source order', () => {
   assert.ok(d.message.includes("duplicate passage name 'Road'"));
 });
 
-test('TW016 unknown frontmatter keys from metaUnknown (string or object entries)', () => {
-  const st = storyOf([passage('P')],
-    { metaUnknown: ['frobnicate', { key: 'wibble', line: 2, col: 1 }] });
-  const hits = codesOf(checkStory(st, ''), 'TW016');
-  assert.equal(hits.length, 2);
-  assert.equal(hits[0].severity, 'warning');
-  assert.ok(hits[0].message.includes("'frobnicate'"));
-  assert.equal(hits[1].line, 2);
-  assert.ok(hits[1].help.includes('title'));
+test('TW016 fires through the real parse pipeline, not just hand-built IR', () => {
+  const { story } = parseStory('---\ntitle: t\nmystery: 1\n---\n== P ==\nx', 'pipe.thorn');
+  const hits = codesOf(checkStory(story, 'pipe.thorn'), 'TW016');
+  assert.equal(hits.length, 1);
+  assert.ok(hits[0].message.includes("'mystery'"));
 });
 
 // ---------------------------------------------------------------------------

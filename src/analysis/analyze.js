@@ -13,19 +13,43 @@ export function buildGraph(story) {
     macro: story.passages[name].params.length > 0,
     words: story.passages[name].words,
   }));
+  const names = new Set(nodes.map((n) => n.name));
   const edges = [];
+  const addEdge = (from, to, extra) => {
+    if (names.has(to)) edges.push({ from, to, ...extra });
+  };
   for (const name of story.order) {
     const p = story.passages[name];
     for (const l of p.links) {
-      if (nodes.some((n) => n.name === l.target)) {
-        edges.push({ from: name, to: l.target, once: !!l.attrs.once, timed: (l.attrs.time ?? 0) > 0 });
-      }
-      if (l.attrs.timeout && nodes.some((n) => n.name === l.attrs.timeout)) {
-        edges.push({ from: name, to: l.attrs.timeout, once: false, timed: true });
-      }
+      addEdge(name, l.target, { once: !!l.attrs.once, timed: (l.attrs.time ?? 0) > 0 });
+      if (l.attrs.timeout) addEdge(name, l.attrs.timeout, { timed: true });
     }
+    for (const nd of p.nodes) markIncludes(nd, name, names, edges);
   }
   return { nodes, edges };
+}
+
+function markIncludes(nd, from, names, edges) {
+  const walk = (n) => {
+    switch (n.k) {
+      case 'p': case 'em': case 'strong': n.kids.forEach(walk); break;
+      case 'if':
+        n.branches.forEach((b) => b.nodes.forEach(walk));
+        n.elseNodes.forEach(walk);
+        break;
+      case 'for': n.nodes.forEach(walk); break;
+      case 'interp':
+        if (n.expr?.t === 'call' && names.has(n.expr.name)) {
+          edges.push({ from, to: n.expr.name, include: true });
+        }
+        break;
+      case 'include':
+        edges.push({ from, to: n.target, include: true });
+        break;
+      default: break;
+    }
+  };
+  walk(nd);
 }
 
 export function reachability(story, graph = buildGraph(story)) {

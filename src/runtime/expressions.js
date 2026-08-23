@@ -129,6 +129,9 @@ export function evalExpr(expr, env) {
         checkArgs(expr, entry, args);
         return entry.fn(env, ...args);
       }
+      if (typeof env.callMacro !== 'function') {
+        throw fault('runtime', `unknown function '${expr.name}'`, expr.pos);
+      }
       const mv = env.callMacro(expr.name, args);
       if (mv === undefined)
         throw fault('runtime', `unknown function '${expr.name}'`, expr.pos);

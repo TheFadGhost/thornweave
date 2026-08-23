@@ -25,7 +25,7 @@ export function parseStory(sourceText, fileName = 'story.thorn') {
     },
     has: (code) => diags.some((d) => d.code === code),
   };
-  const lines = sourceText.split(/\r?\n/);
+  const lines = sourceText.replace(/^\uFEFF/, '').split(/\r?\n/);
   const meta = { title: stem(fileName), author: '', description: '', start: '', show: [], seed: null };
   const varsInit = {};
   const metaUnknown = [];
@@ -39,7 +39,7 @@ export function parseStory(sourceText, fileName = 'story.thorn') {
   const order = [];
   while (idx < lines.length) {
     const line = lines[idx];
-    if (line.trim() === '') { idx++; continue; }
+    if (line.trim() === '' || line.trim().startsWith('%%')) { idx++; continue; }
     const hm = /^==+(.*)$/.exec(line);
     if (!hm) {
       collector.add('error', 'TW020', 'prose appears before any passage header', { line: idx + 1, col: 1 }, { help: 'start the file with == Passage Name == or frontmatter' });
@@ -250,7 +250,6 @@ function collectBody(lines, startIdx, headerLineNo, passageName, collector, para
     if (buf.length === 0) return;
     const entries = buf.splice(0, buf.length);
     for (const entry of entries) {
-      if (entry.stmt) { processNode(entry.stmt); continue; }
       if (entry.raw === undefined) continue;
       const lineNo = entry.line;
       const posAt = () => ({ line: lineNo, col: 1 });

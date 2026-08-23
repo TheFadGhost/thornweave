@@ -33,17 +33,7 @@ function paint(text, color, colors) {
   return colors ? ANSI[color] + text + ANSI.reset : text;
 }
 
-/** Split source text into lines; tolerant of CRLF and absent input. */
-export function sourceLines(sourceText) {
-  if (typeof sourceText !== 'string') return [];
-  return sourceText.split(/\r?\n/);
-}
-
-/**
- * Render one diagnostic in the DESIGN anatomy.
- * @param {import('../syntax/ast.js').Diagnostic} d
- * @param {{colors?: boolean, sourceText?: string, source?: string}} [opts]
- */
+/** Format one diagnostic per DESIGN.md's anatomy; plain or ANSI-colored. */
 export function formatDiagnostic(d, opts = {}) {
   const colors = opts.colors === true;
   const lines = typeof opts.sourceText === 'string'

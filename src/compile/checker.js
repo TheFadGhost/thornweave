@@ -89,7 +89,7 @@ export function checkStory(story, _sourceText, fileName = 'story.thorn') {
   }
 
   // ---- TW016: unknown frontmatter keys -----------------------------------
-  for (const entry of story.metaUnknown ?? []) {
+  for (const entry of story.meta?.metaUnknown ?? story.metaUnknown ?? []) {
     const key = typeof entry === 'string' ? entry : entry.key;
     if (!key) continue;
     const line = typeof entry === 'object' && entry.line ? entry.line : 1;
@@ -331,6 +331,7 @@ export function checkStory(story, _sourceText, fileName = 'story.thorn') {
       passage: p,
       story,
       push: (...args) => push(...args),
+      passageNameArgs: collectPassageNameArgs(p.nodes ?? []),
     };
     for (const [k, tv] of Object.entries(story.varsInit ?? {})) st.types[k] = tv.t;
     for (const param of p.params ?? []) st.defs.add(param);
@@ -338,6 +339,37 @@ export function checkStory(story, _sourceText, fileName = 'story.thorn') {
   }
 
   return sortDiagnostics(ds);
+}
+
+/** Names used bare inside visited(...)/seen(...): almost always meant as strings. */
+function collectPassageNameArgs(nodes) {
+  const out = new Set();
+  const scanExpr = (expr) => {
+    if (!expr || typeof expr !== 'object') return;
+    walkExpr(expr, (e) => {
+      if (e.t === 'call' && (e.name === 'visited' || e.name === 'seen') && e.args[0]?.t === 'var') {
+        out.add(e.args[0].name);
+      }
+      if (e.t === 'list') e.items.forEach(scanExpr);
+      if (e.args) e.args.forEach((a) => { if (a?.t === 'var') return; });
+    });
+  };
+  const seeNodes = (ns) => {
+    for (const nd of ns) {
+      switch (nd.k) {
+        case 'p': case 'em': case 'strong': seeNodes(nd.kids); break;
+        case 'interp': if (nd.expr) scanExpr(nd.expr); break;
+        case 'if':
+          for (const b of nd.branches) { scanExpr(b.cond); seeNodes(b.nodes); }
+          seeNodes(nd.elseNodes);
+          break;
+        case 'for': scanExpr(nd.iter); seeNodes(nd.nodes); break;
+        default: break;
+      }
+    }
+  };
+  seeNodes(nodes);
+  return out;
 }
 
 // ---------------------------------------------------------------------------
@@ -377,9 +409,12 @@ function checkVarRead(node, st) {
   if (st.defs.has(node.name) || st.reported.has(node.name)) return;
   st.reported.add(node.name); // first read site per variable per passage
   const ever = st.allAssigned?.has(node.name);
-  const help = ever
-    ? `'${node.name}' may be unset here; declare it in frontmatter 'vars:' or '~set ${node.name} = …' earlier in the passage`
-    : `'${node.name}' is never assigned anywhere in this story; add it to frontmatter 'vars:' or create it with '~set ${node.name} = …'`;
+  const inPassageFn = st.passageNameArgs?.has(node.name);
+  const help = inPassageFn
+    ? `passage names are strings here: write visited("${node.name}") or seen("${node.name}")`
+    : ever
+      ? `'${node.name}' may be unset here; declare it in frontmatter 'vars:' or '~set ${node.name} = .' earlier in the passage`
+      : `'${node.name}' is never assigned anywhere in this story; add it to frontmatter 'vars:' or create it with '~set ${node.name} = .'`;
   st.push('warning', 'TW005',
     `variable '${node.name}' may be read before being set`,
     node.pos.line, node.pos.col, node.pos.col + node.name.length, help);

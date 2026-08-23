@@ -48,10 +48,12 @@ The tollkeeper waves you through anyway. "Tell them Vess sent you."
 == Square ==
 Lamplighters count their lamps here at dusk.
 
-%% Reusable fragment:
+%% Reusable fragment — splice other passages with {{include Name}}:
 {{include Signpost}}
 
-== Hills ==
+[[Take the hill path out of town -> Hills]]
+
+== Hills [ending] ==
 The path switchbacks twice before the town becomes a map beneath you.
 
 == Signpost ==

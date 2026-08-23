@@ -20,7 +20,7 @@ const MIME = {
 
 async function serveStatic(res, urlPath) {
   const abs = resolve(ROOT, '.' + urlPath);
-  if (!abs.startsWith(ROOT)) {
+  if (abs !== ROOT && !abs.startsWith(ROOT + '\\') && !abs.startsWith(ROOT + '/')) {
     res.writeHead(403).end('forbidden');
     return true;
   }
@@ -80,8 +80,7 @@ export function createStoryServer(file, { watch = false, debug = false } = {}) {
   };
 
   const handler = async (req, res) => {
-    const port = req.headers.host?.split(':')[1] ?? '80';
-    const url = new URL(req.url, `http://localhost:${port}`);
+    const url = new URL(req.url, 'http://thornweave.local');
     try {
       if (url.pathname === '/events' && watch) {
         res.writeHead(200, {
@@ -125,13 +124,19 @@ async function serve(flags, c, { watch }) {
   const port = flags.port || 7337;
   const debug = !!flags.debug;
 
+  const handlerRef = createStoryServer(file, { watch, debug });
+  let watcher = null;
   if (watch) {
     const { watch: fsWatch } = await import('node:fs');
-    fsWatch(file, () => handlerRef.invalidate());
+    watcher = fsWatch(file, () => handlerRef.invalidate());
   }
 
-  const handlerRef = createStoryServer(file, { watch, debug });
   const server = createServer(handlerRef);
+  server.on('close', () => { if (watcher) watcher.close(); });
+  process.once('SIGINT', () => {
+    server.close(() => process.exit(0));
+    server.closeAllConnections();
+  });
 
   await new Promise((ok) => server.listen(port, ok));
   console.log(c.bold(`thornweave ${watch ? 'preview' : 'player'}`) + c.dim(` — ${watch ? 'live-reload on save' : 'reading server'}`));

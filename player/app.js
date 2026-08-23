@@ -13,7 +13,7 @@ const OFFLINE = window.__THORN_OFFLINE__ === true;
 const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');
 const SETTINGS_KEY = 'tw.settings';
 const THEME_KEY = 'tw.theme';
-const DEFAULT_SETTINGS = { timers: 'normal', reveal: false, fontSize: 19, lineHeight: 1.65 };
+const DEFAULT_SETTINGS = { timers: 'normal', reveal: false, fontSize: 19, lineHeight: 1.65, scroll: true };
 
 const E = {};
 let story = null;
@@ -74,6 +74,7 @@ function loadPrefs() {
     reveal: typeof stored.reveal === 'boolean' ? stored.reveal : DEFAULT_SETTINGS.reveal,
     fontSize: clampInt(stored.fontSize, 16, 24, DEFAULT_SETTINGS.fontSize),
     lineHeight: clampStep(stored.lineHeight, 1.4, 2, 0.05, DEFAULT_SETTINGS.lineHeight),
+    scroll: typeof stored.scroll === 'boolean' ? stored.scroll : DEFAULT_SETTINGS.scroll,
   };
 }
 
@@ -105,6 +106,7 @@ function syncSettingsControls() {
   E.setLh.value = String(settings.lineHeight);
   E.outLh.textContent = Number(settings.lineHeight).toFixed(2);
   E.setReveal.checked = settings.reveal === true;
+  if (E.setScroll) E.setScroll.checked = settings.scroll !== false;
   E.setTimers.value = settings.timers;
 }
 
@@ -143,12 +145,12 @@ async function loadStory() {
   try {
     pl = await getPayload();
   } catch (err) {
-    E.reader.replaceChildren();
+    clearReader();
     showError(`The story could not be loaded. ${err && err.message ? err.message : ''}`, { retry: true });
     return;
   }
   if (!pl || pl.ok !== true || !pl.story) {
-    E.reader.replaceChildren();
+    clearReader();
     const diags = Array.isArray(pl && pl.diagnostics)
       ? pl.diagnostics
         .map((d) => `${d.severity}[${d.code}] ${d.message}${d.line != null ? ` (${d.line}:${d.col})` : ''}`)
@@ -179,7 +181,7 @@ function newGame(seed) {
   E.trList.replaceChildren();
   lastSection = null;
   lastRender = null;
-  E.reader.replaceChildren();
+  clearReader();
   let r = null;
   try {
     r = engine.start(state);
@@ -192,8 +194,18 @@ function newGame(seed) {
   renderTurn(r);
 }
 
+let sealedCount = 0;
+
+function clearReader() {
+  E.reader.replaceChildren();
+  sealedCount = 0;
+}
+
 function sealHistory() {
-  for (const sec of Array.from(E.reader.children)) {
+  const kids = E.reader.children;
+  for (; sealedCount < kids.length; sealedCount++) {
+    const sec = kids[sealedCount];
+    if (sec === lastSection) break;
     sec.querySelectorAll('button').forEach((b) => { b.disabled = true; });
     sec.querySelectorAll('a.inline-link').forEach((a) => {
       const sp = document.createElement('span');
@@ -227,11 +239,13 @@ function buildChoices(choices) {
     const b = el('button', 'choice');
     b.type = 'button';
     b.dataset.choice = String(c.i);
-    b.setAttribute('aria-label', `${c.i + 1}. ${c.label}`);
+    b.dataset.num = String(c.i + 1);
+    const taken = c.consumed || c.disabled;
+    b.setAttribute('aria-label', `${c.i + 1}. ${c.label}${taken ? ' (already taken)' : ''}`);
     const labelSpan = document.createElement('span');
     labelSpan.textContent = c.label;
     b.appendChild(labelSpan);
-    if (c.consumed || c.disabled) {
+    if (taken) {
       li.classList.add('choice--consumed');
       b.classList.add('choice--consumed');
       b.disabled = true;
@@ -294,7 +308,7 @@ function renderTurn(r, opts = {}) {
 }
 
 function postNavigation(sec, nearBottom, announcement) {
-  if (nearBottom) {
+  if (nearBottom && settings.scroll !== false) {
     const top = sec.getBoundingClientRect().top + window.scrollY;
     window.scrollTo({ top: Math.max(0, top), behavior: REDUCED.matches ? 'auto' : 'smooth' });
   }
@@ -364,8 +378,12 @@ function startTimers(r) {
     });
   }
   timerInt = window.setInterval(tickTimers, 1000);
-  const soonest = Math.min(...activeTimers.map((t) => t.total));
-  window.setTimeout(() => { if (activeTimers.length > 0) announce(`${soonest} seconds`); }, 900);
+  const soonest = timed.reduce((a, b) => (effSeconds(b.time) < effSeconds(a.time) ? b : a), timed[0]);
+  window.setTimeout(() => {
+    if (activeTimers.length > 0) {
+      announce(`"${soonest.label}": ${Math.ceil(effSeconds(soonest.time))} seconds. When time runs out, the story moves on.`);
+    }
+  }, 900);
 }
 
 function tickTimers() {
@@ -420,7 +438,7 @@ function doRewindStep() {
     showError(String((err && err.message) || err));
     return;
   }
-  E.reader.replaceChildren();
+  clearReader();
   lastSection = null;
   lastRender = null;
   renderTurn(r);
@@ -435,7 +453,12 @@ function rerenderLastSection(r) {
   lastRender = r;
   stopTimers();
   if (!lastSection) return;
+  const hadFocus = lastSection.contains(document.activeElement);
   buildSectionInto(lastSection, r);
+  if (hadFocus) {
+    const h = lastSection.querySelector('h2');
+    if (h) h.focus({ preventScroll: true });
+  }
   startTimers(r);
   updateStatus();
   renderSaves();
@@ -478,7 +501,7 @@ function doLoad(slot) {
     showError(String((err && err.message) || err));
     return;
   }
-  E.reader.replaceChildren();
+  clearReader();
   lastSection = null;
   lastRender = null;
   notice(`Loaded slot ${slot}.`);
@@ -566,30 +589,38 @@ function updateStatus() {
 
 function addDrawerEntry(turn, text, suffix, rewindStyle) {
   const li = el('li', 'transcript-entry' + (rewindStyle ? ' transcript-entry--rewind' : ''));
-  const t = el('span', 'turn');
-  t.textContent = `[turn ${turn}]`;
-  li.appendChild(t);
-  li.appendChild(document.createTextNode(text + (suffix ? ` — ${suffix}` : '')));
+  li.textContent = `Turn ${turn} — ${text}${suffix ? ` — ${suffix}` : ''}`;
   E.trList.appendChild(li);
+  while (E.trList.children.length > 400) E.trList.removeChild(E.trList.firstChild);
   E.trList.scrollTop = E.trList.scrollHeight;
 }
 
 function toggleDrawer(d) {
   const isOpen = d.style.display !== 'none';
+  const opener = d === E.trDrawer ? E.tbTranscript : E.tbSettings;
   closeDrawers();
   if (!isOpen) {
+    d.dataset.opener = '1';
     d.style.display = '';
     const first = d.querySelector('button, input, select');
     if (first) first.focus();
-  } else {
-    const back = d === E.trDrawer ? E.tbTranscript : E.tbSettings;
-    if (back) back.focus();
+  } else if (opener) {
+    opener.focus();
   }
 }
 
 function closeDrawers() {
-  E.trDrawer.style.display = 'none';
-  E.setDrawer.style.display = 'none';
+  let reopen = null;
+  for (const d of [E.trDrawer, E.setDrawer]) {
+    if (d.style.display !== 'none' && d.dataset.opener === '1') {
+      reopen = d === E.trDrawer ? E.tbTranscript : E.tbSettings;
+    }
+    d.style.display = 'none';
+    delete d.dataset.opener;
+  }
+  if (reopen && document.activeElement !== reopen && !E.reader.contains(document.activeElement)) {
+    reopen.focus();
+  }
 }
 
 function anyDrawerOpen() {
@@ -657,7 +688,7 @@ function showError(message, opts = {}) {
   }
   acts.appendChild(mkbtn('Dismiss', () => sec.remove()));
   sec.appendChild(acts);
-  E.reader.appendChild(sec);
+  E.reader.prepend(sec);
 }
 
 function updateRewindButton() {
@@ -788,9 +819,8 @@ function doJump(name) {
 
 function activateByNumber(n) {
   if (!lastSection) return;
-  const btns = Array.from(lastSection.querySelectorAll('ol button.choice')).filter((b) => !b.disabled);
-  const b = btns[n - 1];
-  if (b) b.click();
+  const b = lastSection.querySelector(`ol button.choice[data-num="${n}"]`);
+  if (b && !b.disabled) b.click();
 }
 
 function bindEvents() {
@@ -850,6 +880,12 @@ function bindEvents() {
     settings.reveal = E.setReveal.checked;
     persistSettings();
   });
+  if (E.setScroll) {
+    E.setScroll.addEventListener('change', () => {
+      settings.scroll = E.setScroll.checked;
+      persistSettings();
+    });
+  }
   E.setTimers.addEventListener('change', () => {
     settings.timers = ['off', 'normal', 'long'].includes(E.setTimers.value) ? E.setTimers.value : 'normal';
     persistSettings();
@@ -910,6 +946,7 @@ function cacheEls() {
   E.setLh = document.getElementById('set-lineheight');
   E.outLh = document.getElementById('out-lineheight');
   E.setReveal = document.getElementById('set-reveal');
+  E.setScroll = document.getElementById('set-scroll');
   E.setTimers = document.getElementById('set-timers');
   E.setClose = document.getElementById('set-close');
   E.live = document.getElementById('live-region');

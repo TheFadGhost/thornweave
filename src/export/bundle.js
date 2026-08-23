@@ -23,6 +23,10 @@ function themeCss() {
 export function buildExport(storyPayload, title = 'A Thornweave Story') {
   const app = bundle('player/app.js', { offline: true });
   const safeTitle = String(title).replace(/[<>&]/g, '');
+  const embedded = JSON.stringify(JSON.stringify(storyPayload))
+    .replace(/</g, '\\u003c')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
   return `<!doctype html>
 <html lang="en" data-theme="light">
 <head>
@@ -37,7 +41,12 @@ ${themeCss()}
 <div id="app" class="app"></div>
 <noscript>This story needs JavaScript to play.</noscript>
 <script>
-window.__THORN_STORY__ = ${JSON.stringify(JSON.stringify(storyPayload))};
+(function () {
+  var t = 'light';
+  try { t = window.localStorage.getItem('tw.theme') || t; } catch (e) {}
+  document.documentElement.dataset.theme = t;
+})();
+window.__THORN_STORY__ = ${embedded};
 window.__THORN_OFFLINE__ = true;
 </script>
 <script>

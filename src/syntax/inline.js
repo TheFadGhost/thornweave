@@ -317,15 +317,28 @@ export function parseBulletLine(rawLine, linePos, posAt, collector) {
     }
   }
   s = s.slice(attrConsumed);
+  if (s.includes('[[')) {
+    collector.add('error', 'TW020', "bulleted choices are plain text with an arrow — [[double brackets]] belong in prose", linePos, {
+      help: 'write * Display text -> Target; attributes go in parentheses before the text, e.g. * (once) Take it -> Room',
+    });
+    return null;
+  }
   const arrowIdx = s.indexOf(' -> ');
   if (arrowIdx === -1) {
-    collector.add('error', 'TW020', "bulleted choice needs an arrow to a destination", linePos, {
+    collector.add('error', 'TW020', 'bulleted choice needs an arrow to a destination', linePos, {
       help: 'write * Display text -> Target',
     });
     return null;
   }
   const displaySrc = s.slice(0, arrowIdx).trim();
   const target = s.slice(arrowIdx + 4).trim();
+  const rest = displaySrc + target;
+  if (splitTop(rest, ['|']).length > 1) {
+    collector.add('error', 'TW020', "bulleted choices take attributes in parentheses: * (once) Text -> Target", linePos, {
+      help: "inline-link attributes like | once | time=8 | timeout -> Passage only work inside [[double brackets]] in prose",
+    });
+    return null;
+  }
   const node = {
     k: 'choice',
     id: '',

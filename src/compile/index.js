@@ -9,9 +9,7 @@ import { sortDiagnostics } from './diagnostics.js';
 
 export function compile(sourceText, fileName = 'story.thorn') {
   const { story, diagnostics: parseDiags } = parseStory(sourceText, fileName);
-  const checkDiags = story && Object.keys(story.passages).length >= 0
-    ? checkStory(story, sourceText, fileName)
-    : [];
+  const checkDiags = checkStory(story, sourceText, fileName);
   const diagnostics = sortDiagnostics([...parseDiags, ...checkDiags]);
   const ok = !diagnostics.some((d) => d.severity === 'error');
   return {

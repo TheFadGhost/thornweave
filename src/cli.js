@@ -23,11 +23,11 @@ const HELP = `thornweave — interactive fiction engine
 Options: --json machine-readable stdout · --no-color plain output`;
 
 function colorize(on) {
-  const c = on ? {
+  return on ? {
     red: (s) => `\x1b[31m${s}\x1b[39m`,
     amber: (s) => `\x1b[33m${s}\x1b[39m`,
     dim: (s) => `\x1b[2m${s}\x1b[22m`,
-    cyan: (s) => `\x1b[36m${s}\x1b[36m`.replace('\x1b[36m\x1b[36m', '\x1b[36m'),
+    cyan: (s) => `\x1b[36m${s}\x1b[39m`,
     green: (s) => `\x1b[32m${s}\x1b[39m`,
     bold: (s) => `\x1b[1m${s}\x1b[22m`,
     underline: (s) => `\x1b[4m${s}\x1b[24m`,
@@ -35,8 +35,6 @@ function colorize(on) {
     red: (s) => s, amber: (s) => s, dim: (s) => s, cyan: (s) => s,
     green: (s) => s, bold: (s) => s, underline: (s) => s,
   };
-  c.cyan = on ? (s) => `\x1b[36m${s}\x1b[39m` : (s) => s;
-  return c;
 }
 
 function argFlags(argv) {
@@ -48,8 +46,20 @@ function argFlags(argv) {
     else if (a === '--debug') flags.debug = true;
     else if (a === '--graph') flags.graph = argv[++i];
     else if (a === '-o' || a === '--out') flags.out = argv[++i];
-    else if (a === '--port') flags.port = Number(argv[++i] ?? 0);
-    else if (a === '--seeds') flags.seeds = Number(argv[++i] ?? 200);
+    else if (a === '--port') {
+      flags.port = Number(argv[++i] ?? 0);
+      if (!Number.isInteger(flags.port) || flags.port < 1 || flags.port > 65535) {
+        console.error('--port must be an integer between 1 and 65535');
+        process.exit(2);
+      }
+    }
+    else if (a === '--seeds') {
+      flags.seeds = Number(argv[++i] ?? 0);
+      if (!Number.isInteger(flags.seeds) || flags.seeds < 1 || flags.seeds > 100000) {
+        console.error('--seeds must be an integer between 1 and 100000');
+        process.exit(2);
+      }
+    }
     else if (a.startsWith('--')) { console.error(`unknown option ${a}`); process.exit(2); }
     else flags._.push(a);
   }

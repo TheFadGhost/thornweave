@@ -98,6 +98,9 @@ export class ExprParser {
   postfix() {
     let e = this.primary();
     while (this.isOp('(')) {
+      if (e.t !== 'var') {
+        throw parseErr('only named functions can be called', e.pos, { help: 'use functionName(arguments)' });
+      }
       this.next();
       const args = [];
       if (!this.isOp(')')) {
@@ -108,8 +111,7 @@ export class ExprParser {
         }
       }
       if (!this.eat('op', ')')) throw parseErr("expected ')' after arguments", this.peek().pos);
-      e = { t: 'call', name: e.t === 'var' ? e.name : null, targetExpr: e.t === 'var' ? undefined : e, args, pos: e.pos };
-      if (e.targetExpr) throw parseErr('only named functions can be called', e.pos, { help: 'use functionName(arguments)' });
+      e = { t: 'call', name: e.name, args, pos: e.pos };
     }
     return e;
   }
@@ -148,24 +150,5 @@ export class ExprParser {
       t.pos,
       { help: 'write an expression like gold >= 10 or has("key")' },
     );
-  }
-}
-
-export function parseExpressionText(src, basePos, collector) {
-  try {
-    const toks = tokenizeExpr(src, basePos, collector);
-    const p = new ExprParser(toks);
-    const expr = p.parse();
-    const endTok = p.peek();
-    if (endTok.k !== 'eof') {
-      throw parseErr(`unexpected '${endTok.v}' after expression`, endTok.pos, { help: 'remove or complete this fragment' });
-    }
-    return expr;
-  } catch (e) {
-    if (e && e.code === 'TW020') {
-      collector.add(e.faultKind === 'warning' ? 'warning' : 'error', 'TW020', e.message, e.pos, { help: e.help });
-      return null;
-    }
-    throw e;
   }
 }

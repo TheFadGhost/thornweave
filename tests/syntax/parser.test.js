@@ -256,6 +256,12 @@ test('parser recovers across broken passages', () => {
   assert.match(JSON.stringify(story.passages.C.nodes), /all fine/);
 });
 
+test('comments before the first passage header are allowed', () => {
+  const { story, diagnostics } = parseStory('%% setup notes\n%% more notes\n== Only ==\nBody');
+  assert.deepEqual(codes(diagnostics), []);
+  assert.ok(story.passages.Only);
+});
+
 test('nested blocks and inline conditionals keep paragraph flow', () => {
   const src = ['== A ==', 'Hello {{if gold > 0}}friend{{else}}stranger{{end}}.', '', '{{if true}}{{for x in range(1,3)}}row {{x}}{{end}}{{end}}'].join('\n');
   const { story, diagnostics } = parseStory(src);

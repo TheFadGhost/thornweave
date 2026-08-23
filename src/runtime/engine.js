@@ -65,7 +65,10 @@ export class Engine {
 
   /** Commit a choice taken from a previous enter() result. */
   choose(state, choice) {
-    if (!choice) throw fault('choice-unavailable', 'no such choice');
+    if (!choice || typeof choice !== 'object') throw fault('choice-unavailable', 'no such choice');
+    if (typeof choice.target !== 'string' || typeof choice.id !== 'string' || choice.id === '') {
+      throw fault('internal', 'malformed choice object');
+    }
     if (choice.disabled || choice.consumed) throw fault('choice-unavailable', 'that choice is no longer available');
     const target = this.story.passages[choice.target];
     if (!target) throw fault('unknown-target', `choice leads to missing passage '${choice.target}'`);
@@ -116,6 +119,7 @@ class Walk {
     this.choices = [];
     this.paraRuns = null;
     this.depth = 0;
+    this.loopPath = [];
     this.env = {
       getVar: (n) => {
         const hit = this.scope.lookup(n);
@@ -190,11 +194,14 @@ class Walk {
   }
 
   registerChoice(node, origin) {
-    const consumedOnce = node.attrs.once && !!this.state.consumed[node.id];
+    const runtimeId = this.loopPath.length > 0
+      ? `${node.id}#${this.loopPath.join('.')}`
+      : node.id;
+    const consumedOnce = node.attrs.once && !!this.state.consumed[runtimeId];
     if (origin === 'bullet' && node.attrs.ifExpr && !truthy(this.eval(node.attrs.ifExpr, node.pos))) return;
     const entry = {
       i: this.choices.length,
-      id: node.id,
+      id: runtimeId,
       origin,
       target: node.target,
       label: this.plainLabel(node.display),
@@ -279,12 +286,18 @@ class Walk {
         if (listVal.length > LOOP_CAP) {
           throw fault('runtime', `loop exceeds the ${LOOP_CAP}-iteration safety cap`, n.pos);
         }
-        for (const item of [...listVal]) {
+        for (let li = 0; li < listVal.length; li++) {
+          const item = listVal[li];
           const sc = new Scope(this.scope);
           this.declare(n.varName, item, sc.vars);
           this.scope = sc;
-          this.run(n.nodes);
-          this.scope = sc.parent;
+          this.loopPath.push(li);
+          try {
+            this.run(n.nodes);
+          } finally {
+            this.loopPath.pop();
+            this.scope = sc.parent;
+          }
         }
         break;
       }
@@ -381,6 +394,4 @@ class Walk {
   }
 }
 
-export function builtinNames() {
-  return Object.keys(BUILTINS);
-}
+

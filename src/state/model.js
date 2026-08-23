@@ -58,6 +58,10 @@ export function deserializeState(json) {
   }
   if (typeof raw.storyHash !== 'string' || typeof raw.current !== 'string')
     throw fault('save-corrupt', 'save fields have wrong types');
+  for (const k of ['seed', 'rngWord', 'turn']) {
+    if (typeof raw[k] !== 'number' || !Number.isFinite(raw[k]))
+      throw fault('save-corrupt', `save field '${k}' must be a number`);
+  }
   return structuredClone(raw);
 }
 
