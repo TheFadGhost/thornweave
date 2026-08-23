@@ -169,9 +169,30 @@ test('inventory take/drop and fault on overdraft', () => {
   assert.throws(() => eng.choose(st2, r2.choices[1]), /cannot drop/);
 });
 
-test('type mismatches and division by zero are runtime faults with positions', () => {
-  const e1 = ready(['== A == [ending]', '~ set n = 1', '~ set n = "x"', 'y'].join('\n'));
-  assert.throws(() => e1.start(e1.newGame(1)), /cannot assign/);
+test('type mismatches are caught statically and dynamically', () => {
+  const c1 = compile(['== A == [ending]', '~ set n = 1', '~ set n = "x"', 'y'].join('\n'));
+  assert.equal(c1.ok, false);
+  assert.ok(c1.diagnostics.some((d) => d.code === 'TW006'));
+
+  const eng = ready([
+    '---', 'vars:', '  n: 1', '---',
+    '== A == [ending]',
+    '~ set x = pick(["ok", 7])',
+    '~ set n = x',
+    'y',
+  ].join('\n'));
+  let caught = null;
+  for (let s = 1; s <= 60 && !caught; s++) {
+    try {
+      eng.start(eng.newGame(s));
+    } catch (e) {
+      if (/cannot assign/.test(e.message)) caught = e;
+    }
+  }
+  assert.ok(caught, 'expected runtime type fault for some seed');
+});
+
+test('division by zero is a runtime fault with a position', () => {
   const e2 = ready(['== A == [ending]', 'Result {{5 / 0}}.', 'z'].join('\n'));
   try {
     e2.start(e2.newGame(1));

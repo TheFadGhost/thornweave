@@ -17,8 +17,12 @@ export function buildGraph(story) {
   for (const name of story.order) {
     const p = story.passages[name];
     for (const l of p.links) {
-      if (!nodes.some((n) => n.name === l.target)) continue;
-      edges.push({ from: name, to: l.target, once: !!l.attrs.once, timed: (l.attrs.time ?? 0) > 0 });
+      if (nodes.some((n) => n.name === l.target)) {
+        edges.push({ from: name, to: l.target, once: !!l.attrs.once, timed: (l.attrs.time ?? 0) > 0 });
+      }
+      if (l.attrs.timeout && nodes.some((n) => n.name === l.attrs.timeout)) {
+        edges.push({ from: name, to: l.attrs.timeout, once: false, timed: true });
+      }
     }
   }
   return { nodes, edges };

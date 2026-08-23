@@ -175,6 +175,7 @@ export function checkStory(story, _sourceText, fileName = 'story.thorn') {
       const scanNodes = (nodes) => {
         for (const nd of nodes) {
           switch (nd.k) {
+            case 'p': scanNodes(nd.kids); break;
             case 'em': case 'strong': scanNodes(nd.kids); break;
             case 'interp': scanExpr(nd.expr, onCall); break;
             case 'if':
@@ -213,9 +214,11 @@ export function checkStory(story, _sourceText, fileName = 'story.thorn') {
       const cur = queue.shift();
       const p = passages[cur];
       for (const l of p.links ?? []) {
-        if (nameSet.has(l.target) && !reachable.has(l.target)) {
-          reachable.add(l.target);
-          queue.push(l.target);
+        for (const t of [l.target, l.attrs?.timeout]) {
+          if (t && nameSet.has(t) && !reachable.has(t)) {
+            reachable.add(t);
+            queue.push(t);
+          }
         }
       }
       for (const e of includeEdges.get(cur) ?? []) {
@@ -243,7 +246,8 @@ export function checkStory(story, _sourceText, fileName = 'story.thorn') {
     const p = passages[name];
     if ((p.params?.length ?? 0) > 0) continue;
     if ((p.tags ?? []).includes('ending')) continue;
-    if ((p.links ?? []).length === 0) {
+    const includedSomewhere = names.some((other) => (includeEdges.get(other) ?? []).some((e) => e.to === name));
+    if ((p.links ?? []).length === 0 && !includedSomewhere) {
       push('warning', 'TW014', `passage '${name}' is a dead end (no outgoing choices)`,
         p.line, 1, undefined,
         `add a choice or link, or tag the passage '[ending]' if it ends the story`);
@@ -480,6 +484,7 @@ function walkNodes(nodes, st) {
     switch (nd.k) {
       case 'text': case 'break':
         break;
+      case 'p':
       case 'em': case 'strong':
         walkNodes(nd.kids, st);
         break;
@@ -626,6 +631,7 @@ function collectAssignedNames(story, names) {
   const seeNodes = (nodes) => {
     for (const nd of nodes) {
       switch (nd.k) {
+        case 'p':
         case 'em': case 'strong': seeNodes(nd.kids); break;
         case 'if':
           for (const b of nd.branches) seeNodes(b.nodes);

@@ -1,0 +1,914 @@
+---
+title: The Keeping of the Light
+author: Mirren Vale
+description: One night, one lamp, and a fog full of bells — the Marn Point light must burn until morning.
+start: The Ferry Steps
+format: 1
+show: watch, nerve, trust, lamp
+vars:
+  watch = 0
+  nerve = 2
+  trust = 0
+  lamp = 1
+  flame = false
+  crackedGlass = false
+  wickTrimmed = false
+  readJournal = false
+  knowsSignal = false
+  boatSeen = false
+  maraHelped = false
+  storeTins = 4
+  fleetLights = []
+  lostNames = ["Aldous Voss, keeper of the Marn light, taken by the great gale.", "Maren Voss, his wife, keeper after him, lost with the brig Long Hope.", "Tom Cleave, apprentice, sixteen years, the same night.", "and every soul the Teeth have taken whose name nobody thought to cut."]
+---
+
+== The Ferry Steps ==
+The ferry backs water off the pilings and leaves you standing on wet boards with a borrowed coat, a solicitor's letter going soft in your pocket, and the whole of the fog coming in behind it like a debt collector. Below your boots the harbour mutters. Above it, somewhere past the church roof, the Marn Point light stands dark for the first night in fifty-one years.
+
+You are the late Mrs Voss's grand-nephew by marriage twice removed, which is how the law puts it. What the letter says is simpler: keep the light burning until the relief boat comes Monday. The Meridian is expected on the young flood tonight, twelve hands and a deck cargo of pit props, and the reef they call the Teeth lies directly under her course.
+
+~ take "storm lantern"
+~ take "tin of lamp oil", 2
+
+In your fist: a storm lantern, cold and unlit. Under your arm: two tins of lamp oil, heavy as sleeping cats. It is the last hour of daylight, and the fog has already eaten the far mole.
+
+[[Follow the lane up from the harbour -> The Cliff Foot]]
+
+== The Cliff Foot ==
+The lane climbs between net-lofts whose windows glow the colour of weak tea. Rope hangs everywhere, drying in coils that brush your shoulder like something alive. Salt sits on your lips; under it, tar, and under that, fish.
+
+{{if seen("The Salt and Anchor")}}
+Light spills again from the Salt and Anchor's windows, and Ivy's laugh comes out flat against the fog.
+{{end}}
+{{if seen("Harbour Office")}}
+The harbour office lamp still burns behind its small panes. Dune keeps late hours.
+{{end}}
+
+From up the headland comes a sound you will hear all night and never quite get used to: the sea working the base of the cliffs, patient, enormous, unhurried.
+
+* Knock at the harbour office -> Harbour Office
+* Push open the door of the Salt and Anchor -> The Salt and Anchor
+* Start up the headland path -> The Headland Path
+* (if turns() >= 60) The letter in your pocket feels suddenly heavy. Up the path -> The Headland Path
+
+== Harbour Office ==
+Elias Dune receives you with a lamp turned low and a chest he can't stop coughing round. Charts cover his desk like dealt cards, and one chart in particular is weighted at the corner with a brass ashtray: the approaches to Marn Point, the Teeth marked in red ink gone brown with age.
+
+"The Meridian," he says, as if you'd asked. "Captain Enys. Due on the young flood, which puts her abeam of you somewhere about three in the morning, if the fog lets her see her own nose. Twelve hands." He looks at you properly then, the way men look at weather. "Mrs Voss kept that light through worse than this for forty years. You'll do it tonight because it must be done."
+
+He shoves a ledger across for your name. Beside the ledger, on a nail, hangs a key on a wooden tag: LAMP STORE.
+
+* (once) Sign the ledger and take the key from its nail -> The Brass Key
+* (once) Ask what's in the steel cabinet behind him -> The Flare Case
+[[Take the cliff path north -> The Cliff Foot]]
+
+== The Brass Key ==
+Your signature goes into the ledger under forty years of Vosses, and the brass key comes off its nail cold and heavier than it looks. Dune watches you pocket it without comment.
+
+"Lamp store's the iron door at the seaward wall," he says. "Full rack. Don't waste it — the drum won't be replenished till the relief boat." He turns back to his charts, then adds, not quite to you: "Mind the third step up. It's a liar."
+
+~ take "brass key"
+
+[[Back across the office -> Harbour Office]]
+
+== The Flare Case ==
+The cabinet opens on a smell of gun oil and old biscuits. Inside: a canvas case, naval stencil half worn away. Inside that: one signal flare, pistol-shaped, red band painted round the barrel, and a waxed note in the coastguard's blunt hand — ONE STAR. RED. FOR USE WHEN ALL ELSE FAILS.
+
+"That's yours if you want it," Dune says. "Cost the parish nothing. Surplus." He coughs. "Though if you're firing it, the night's already gone wrong."
+
+~ take "signal flare"
+
+[[Take the case and thank him -> Harbour Office]]
+
+== The Salt and Anchor ==
+Warmth first, then noise: the Anchor is low-ceilinged, thick with pipe smoke and the particular steam of twenty wet coats drying at once. A fire mutters in a black-leaded stove. Behind the bar, a broad woman with forearms like mooring posts is drawing cider and opinions in equal measure. A chalkboard advertises STEW and, underneath, in smaller chalk, NO CREDIT FOR LIGHTHOUSE ARGUMENTS.
+
+Conversations dip as you come in — the stranger, the coat, the letter everyone's already heard about — then rise again.
+
+* (once) Claim the bench closest to the stove -> Warm at the Stove
+* (once) Ask the landlady about the Voss family -> Ivy Tells It
+[[Drink up and climb while the light lasts -> The Cliff Foot]]
+
+== Warm at the Stove ==
+The bench accepts you. Heat finds the small of your back and works outward, loosening joints you hadn't noticed seizing. Someone passes your knee a mug of something scalding and sweet without being asked, which is the harbour's way of wishing you luck.
+
+For ten minutes you simply sit, watching the fire breathe, listening to the building tick. Whatever the night means to do to you, it will do it warmer-hearted than it would have.
+
+~ set nerve = nerve + 1
+
+[[Reluctantly, back to the door -> The Salt and Anchor]]
+
+== Ivy Tells It ==
+Ivy Tregale plants a pint in front of you uninvited and leans on the bar.
+
+"You'll be the one up at Marn tonight." It isn't a question. "Voss women kept that light since before this pub had windows. Old Aldous drowned in the gale and his Maren walked up the zigzag every night after, alone, thirty years, rain or rifles." She polishes a glass that was already clean. "Young Edith was the last. Her granddaughter's been staying with me since the funeral. Good girl. Takes it hard, the tower standing empty."
+
+She leans closer, voice dropping under the stove's mutter. "And you'll hear the Gullet buoy tonight. All the old ones say it rings hardest when the Teeth are hungry. Edith never laughed at that, mind. Edith never laughed at much."
+
+[[Finish the pint -> The Salt and Anchor]]
+
+== The Headland Path ==
+The path leaves the lane where the gaslight gives out and becomes a rutted trodden spine through gorse. Fog closes from both sides at once, soft and total, and the world shrinks to eight feet of turf with the sea's breathing somewhere below your left boot.
+
+Twice, shapes loom and resolve: a leaning waymark post; a rusted capstan winch abandoned by some contractor forty years dead. Overhead — nothing. The tower is somewhere above you, but the fog has taken it entirely, and with it any sense of how high you've climbed.
+
+Once, faint through the murk, a bell strikes three times, pauses, strikes three more.
+
+[[Where the ground tilts, take the zigzag stair above the surf -> The Zigzag Stair]]
+[[Think better of it and go back down to the town -> The Cliff Foot]]
+
+== The Zigzag Stair ==
+The stair is iron, bolted to the cliff in switchbacks, with a chain rail that has absorbed a century of salt and grief. Below you, unseen, the surf files its complaints against the rock. The wind arrives in freight loads, one after another, shoving the fog past you in ribbons.
+
+Halfway up, the gulls prove the fog is not empty: one bursts off the ledge beside your head, screaming, and your heart tries to leave by your throat.
+
+* (time=9, timeout -> The Lost Lantern) Grip the chain with both hands and take the next gust head-on -> Ride It Out
+* Drop to a crouch and feel for each step with your boot before trusting it -> Chain Crawl
+
+== Ride It Out ==
+The gust hits like a door swung by God. Your coat snaps, the chain hums, and the world tilts ten degrees before slamming back. You hold — boots wide, knuckles white, breath torn sideways out of you — and then it's past, and the fog streams on down the cliff without you.
+
+When your hearing returns, the surf sounds pleased with itself. Above, dim and sudden, a yellow square resolves: the tower's lower window. Nearly there.
+
+[[Through the door in the white base of the tower -> Tower Door]]
+
+== Chain Crawl ==
+You go up the way ivy does, slowly, on principle. Each step gets felt for, argued with, taken. It is humiliating and effective, and the wind has all the time in the world to work on a moving target.
+
+It takes your collar at the fifth switchback and shakes you like a rat. Something leaves you — hat, lantern, dignity, depending on what you carried — and goes clattering away into the dark below. You hear the sea receive it.
+
+~ set nerve = nerve - 1
+
+[[Climb the rest on hands and knees -> The Lost Lantern]]
+
+== The Lost Lantern ==
+{{if has("storm lantern")}}
+The wind finds the storm lantern's bail and plucks it from your grip with a tenderness that is worse than violence. You see it turn once against the fog, still absurdly upright, and then the dark below closes its hand.
+
+~ drop "storm lantern"
+
+You lean into the rock and breathe until the loss shrinks to something you can carry instead.
+{{else}}
+The gust that's been stalking you finally connects — a slap across the shoulders that sends you to one knee on the wet iron, palms skinned, cap gone somewhere below without even a splash to mark it.
+
+The cliff took its toll. It does not apologise.
+{{end}}
+
+~ set nerve = nerve - 1
+
+[[Push on to the white base of the tower -> Tower Door]]
+
+== Tower Door ==
+The tower's base is a drum of whitewashed stone, and its seaward door stands open — Mrs Voss left it that way, perhaps, or the wind has opinions about doors. Inside, a lamplight sways.
+
+A girl is sitting on the step with her back to the jamb, a hurricane lamp between her boots and a covered basket by her feet. Seventeen, perhaps. Dark hair pinned badly. She looks up, and you see her decide not to cry.
+
+"You'll be the nephew," she says. "Mara Voss. Edith was my gran." She nods at the doorway, at the cold spiral visible beyond it. "Somebody's got to sit with it the first night. That's what she always said. Somebody's got to sit with it."
+
+{{if trust >= 2}}
+She shifts along the step to make proper room, and the basket's smell of warm bread escapes for a moment.
+{{end}}
+
+* Climb to the watch room -> The Spiral Stair
+* Try the iron door set in the seaward wall -> The Oil Store
+* Sit down beside her on the step -> Mara at the Door
+* (if turns() >= 60) The fog is thickening. Whatever tonight needs, it needs it upstairs -> The Spiral Stair
+
+== The Oil Store ==
+The iron door opens on a room the size of a confessional, stone-flagged, cold as a cellar. Wooden racks line one wall, and in them stand the tins: squat, sealed, stencilled KEEPER'S GRADE — PARAFFIN, each one a night's wages in oil. The smell is thick enough to chew. In fifty years this little cell has been the difference between ships coming home and ships not, and it smells like it knows.
+
+{{if storeTins >= 2}}
+Four tins wait in the rack. The rest of the shelf space wears pale rectangles of dust where other tins stood, other nights, other hands.
+{{else}}
+The rack stands empty. Nothing left in the store but the smell and the dust-shadows of everything that burned.
+{{end}}
+
+* (if has("brass key") and storeTins >= 2) Haul two tins up into the daylight -> Two More Tins
+[[Back out to the base of the tower -> Tower Door]]
+
+== Two More Tins ==
+You load two tins, one through each elbow, and the weight of them rearranges your posture and your opinion of Mrs Voss simultaneously. Forty years she climbed this rock with these under her arms. The door bangs behind you; the fog presses politely at your back all the way to the stair.
+
+~ set storeTins = storeTins - 2
+~ take "tin of lamp oil", 2
+
+[[Hump the burden up the spiral stair -> The Spiral Stair]]
+
+== Mara at the Door ==
+You settle onto the step. For a while neither of you says anything, which is its own kind of company. The hurricane lamp throws your two shadows huge against the whitewash, joined at the shoulder.
+
+{{if visited("Mara at the Door") == 1}}
+"She sat right here, you know," Mara says at last. "Every evening before she climbed. Gran said the tower won't startle on you if you let it get used to your weight on the step."
+{{elif trust >= 2}}
+This time she hands you bread without being asked, thick slices with butter gone sweaty in the basket. Eating together on a cold step is a faster friendship than most.
+{{else}}
+She watches the fog move over the harbour lights below like it's a programme she's seen before but hopes ends differently.
+{{end}}
+
+{{if trust >= 1}}
+"I don't care what the solicitor's paper says," she adds quietly. "Tonight that light's ours. Yours and mine."
+{{end}}
+
+* (once) Ask her about her grandmother -> About Edda Voss
+* (once) Promise her the light will burn till morning -> A Promise Made
+* (once, if readJournal) Show her the journal you found -> The Journal Shared
+* (once, if trust >= 2) Ask her to run two tins up the stair while you mind the flame -> Mara Carries Tins
+* (once, if trust >= 2) Ask what she knows about the horn signals -> The Signal Pattern
+* (if turns() >= 60) Squeeze her hand and go in; the tower is waiting -> Tower Door
+[[Leave her to her vigil and go inside -> Tower Door]]
+
+== About Edda Voss ==
+"Gran?" Mara turns the hurricane lamp's wick down, the way you do when you're settling in to talk. "She taught me the lens before she taught me letters. Which way to wipe the glass, never in circles. How to hear weather in the buoy." A pause. "People think keeping a light is loneliness. It isn't. It's housework for something enormous. You feed it, you clean it, you sit up with it when it's poorly."
+
+Her chin comes up. "She meant to train me next year. Now the relief boat brings some stranger Monday, and nobody will know the third rung sings in a crosswind."
+
+~ set trust = trust + 1
+
+[[Sit with her a moment longer -> Mara at the Door]]
+
+== A Promise Made ==
+You say it plainly, because anything fancier would break on her: the light will burn till morning. The Meridian will see it. You will be up there all night if that's what it takes.
+
+Mara looks at you for a long moment, and whatever she was going to say about strangers and solicitors' papers, she folds it away and puts it in her pocket.
+
+"All right," she says. "Then I'll be here at first light to see it out." She holds out her hand, and hers is a working hand, small and rough as a rope's end. You shake it.
+
+~ set trust = trust + 1
+
+[[Go in ready for anything -> Mara at the Door]]
+
+== The Journal Shared ==
+You bring out the cloth-bound journal and tell her where you found it, open on the desk like it was being read to.
+
+Mara goes very still. Then she turns to the back page, the one you couldn't decipher, and laughs — one wet, surprised bark of a laugh.
+
+"It's me. It's my handwriting. She made me copy out the horn patterns last spring, said a light that can't talk is just a candle in a jar." Her finger stops on a line. "'Tell whoever follows: three-and-one means Voss.' Gran." She wipes her face with her sleeve, briskly, businesslike. "Right. Now you know it properly."
+
+~ set trust = trust + 1
+
+[[Leave her the last slice of bread -> Mara at the Door]]
+
+== Mara Carries Tins ==
+She's up before you've finished agreeing, basket hooked over one arm, already reaching for your elbow. "Two at a time, elbows not hands, or you'll be visiting the third-step liar." And she's away into the tower's throat, lamp bobbing, boots quick on the iron.
+
+You hear her all the way up — a knock, a scrape, her breath — and then she's back down, flushed and satisfied, and somewhere above you two more tins sit waiting in the lamp room's rack like answered prayers.
+
+~ take "tin of lamp oil", 2
+
+[[Thank her properly -> Mara at the Door]]
+
+== The Signal Pattern ==
+"The horn's a language," Mara says, standing, suddenly brisk. "Gran drilled me on it till I dreamed it. Listen: three blasts and one. Three-and-one means this light, this shore, Voss keeping. Any master who's sailed this coast twenty years knows it like his mother's voice." She taps out the rhythm on her thigh: bum, bum, bum, bumm. "You sound that when a ship's blind out there, and she'll know exactly whose shore she's leaning on, and which side her water is."
+
+You say it back until she nods.
+
+~ set knowsSignal = true
+
+[[Fix the rhythm in your memory -> Mara at the Door]]
+
+== The Spiral Stair ==
+Inside, the tower is a cold throat of stone spiralling up into blackness. Iron stairs pinwheel around a central column hung with counterweights and the ghosts of pulleys. Your boots ring; the ring travels up ahead of you, announcing your arrival to the night shift.
+
+{{if visited("The Lamp Room") > 2}}
+Your legs have learned the rhythm now — riser, riser, landing, turn — and take it without consulting you. The climb that nearly killed your lungs at dusk has become almost contemplative: forty tons of masonry, and you ticking up through its middle like a second hand.
+{{else}}
+Halfway, the third step from the landing clangs hollow under your boot — Dune's liar step, loose on its bolts. You commit the sound to memory. On a night like tonight, a lie told once is a warning; told twice, a trap.
+{{end}}
+
+Wind moans somewhere above, thin as a flute.
+
+[[Up to the watch room -> The Watch Room]]
+[[Back down to the base -> Tower Door]]
+
+== The Watch Room ==
+The watch room is the tower's heart: a circular chamber panelled in pale pine gone honey-dark, a desk under the seaward window, a cupboard, a stool, and a potbellied stove that radiates the memory of fires rather than fire itself. Everything is squared away with the particular neatness of someone who expected to die elsewhere. Logbooks in a row. A folded chart. On the wall, mounted like a saint's picture, a framed photograph of a woman in a high collar, unsmiling, magnificent.
+
+{{if visited("The Watch Room") > 1}}
+The room feels different on a second visit — smaller, warmer, as if it has decided about you.
+{{end}}
+
+* Open the writing desk -> The Writing Desk
+* Study the brass plate beside the window -> The Memorial Plate
+* (once) Lift the storm lantern down from its ceiling hook -> Lantern From the Peg
+* (if turns() >= 60) The stair creaks a reminder: the lamp keeps its own hours, not yours -> The Lamp Room
+[[Up the ship's ladder to the lamp -> The Lamp Room]]
+[[Down the spiral stair -> The Spiral Stair]]
+
+== Lantern From the Peg ==
+The storm lantern comes down off its hook on a length of sash cord, and it is a good one — brass-framed, glass smoked clean, the wick dry and waiting. Mrs Voss's spare, kept ready the way she kept everything: as if tonight were coming.
+
+You light it from the stove's coals and hang the glow from your fist. The tower gives you a longer shadow to carry.
+
+~ take "storm lantern"
+
+[[Climb with the light swinging at your knee -> The Watch Room]]
+
+== The Writing Desk ==
+The desk is oak, scarred, orderly. An inkwell with the pen laid across it at a precise angle, as if its owner had been called away mid-word. A stack of supply requisitions, filled out in a copperplate hand, dated through the end of the month — through the end of her life. A drawer, fitted tight, the wood swollen with salt damp.
+
+{{if seen("The Journal")}}
+The place where the journal lay is a journal-shaped rectangle free of dust.
+{{end}}
+
+* (once) Force the swollen drawer -> The Deep Drawer
+* (once) Take the cloth-bound journal lying open at the corner -> The Journal
+[[Back to the centre of the room -> The Watch Room]]
+
+== The Deep Drawer ==
+You work the drawer with a heel-rocking pull that would have appalled its owner. It gives all at once and spills its secrets into the lamplight: spare glasses, a coil of fuse wire, a tin of peppermints fused into a single mint meteorite —
+
+— and a box of matches, waxed and full, because Mrs Voss was not a woman who trusted darkness to behave.
+
+~ take "box of matches"
+
+[[Sweep everything back and shut the drawer -> The Writing Desk]]
+
+== The Journal ==
+The journal is cloth-bound, black, fat with decades. You mean to skim it. Instead you read.
+
+The early pages are supply sums and weather, a clerk's soul. Then, somewhere around the war years, a voice surfaces — dry, exact, alive:
+
+*A gull has learned to sit on the ventilator and scream when I sweep. I am paying it in biscuit to scream elsewhere.*
+
+*Nine weeks of fog. The bell never stopped. Some nights I rang the bell back. Nobody will ever know this but the fog, and now the book.*
+
+And near the end, in a shakier hand, half a page that reads like a will:
+
+*Three-and-one is our hail, three-and-one the answer. Tell whoever follows: the light is not a job, it is a guest you keep. Feed it. Sit with it. It hates to be alone, and it is never, ever sentimental about the careless.*
+
+~ take "keeper's journal"
+~ set readJournal = true
+~ set knowsSignal = true
+
+[[Put it inside your coat, next to the letter -> The Writing Desk]]
+
+== The Memorial Plate ==
+Brass, screwed to the panelling where the light falls, polished by a century of sleeves: a tablet of names. Not decorative. This is the tower's own graveyard, kept indoors where the sea can't gloat over it.
+
+{{for line in lostNames}}
+In brass: {{line}}
+{{end}}
+
+Below the names, smaller, in the same confident capitals: THEY KEPT THE WATCH. KEEP IT.
+
+* (once) Trace the newest letters with a fingertip -> Newest Name
+[[Back to the window and its fog-grey light -> The Watch Room]]
+
+== Newest Name ==
+The bottom row is newer than the rest — recut, regilded, the letters still sharp enough to bite a careless fingertip. TOM CLEAVE, APPRENTICE, SIXTEEN, the same night as Maren Voss and the Long Hope. A boy sent up to fetch something. A woman who went down looking for him.
+
+You take your finger off the brass gently, the way you'd close a door on sleepers.
+
+[[Back to the plate -> The Memorial Plate]]
+
+== The Lamp Room ==
+The ship's ladder delivers you into the lantern: a glass drum at the crown of the tower, walled in curved panes and the great lens, which stands at the centre like the idol of some vast polite religion — brass ribs, a bullseye of cut crystal taller than you, everything built to gather one small flame and throw it twenty miles.
+
+The lamp itself squats beneath the lens on its brass pedestal: reservoir, wick-holder, the spirit cup for priming. Cold. Unlit. The glass around you holds the fog at bay, and beyond the glass the world is a suggestion of darker grey.
+
+{{Gauge(lamp)}}
+
+{{if crackedGlass}}
+One lower pane wears a crack like a frozen river. The lens still gathers, but the wind worries the flaw all night, a thin tick like a clock that suspects something.
+{{end}}
+{{if not flame}}
+The wick sits dry in its holder, waiting to be somebody's.
+{{end}}
+{{if visited("The Lamp Room") > 3}}
+You know this room now. Your boots know the two floorboards that rock. The room, you suspect, knows you back.
+{{end}}
+
+* (if not flame and lamp > 0) Prime the wick from the spirit cup and light it -> First Flame
+* (if not flame and count("tin of lamp oil") > 0) Pour a tin and coax the wick back to life -> Wick Relit
+* (if flame and count("tin of lamp oil") > 0) Pour a tin into the reservoir -> Tin Poured
+* (if flame and not wickTrimmed) Trim the char off the wick -> Wick Trimmed
+* (if watch < 2) Settle onto the stool and begin the night's keeping -> Second Watch
+* (if watch == 2) Carry the watch on into the deep hours -> Third Watch
+* (if watch == 3) Carry the watch into the coldest hour -> Fourth Watch
+* (if watch == 4) Carry the watch toward the grey edge -> Fifth Watch
+* (if watch == 5) See the grey hour in -> The Grey Hour
+* Step out through the door to the gallery rail -> The Gallery
+* (if flame) Press your eye to the seaward pane -> Seaward View
+[[Down the ship's ladder to the watch room -> The Watch Room]]
+
+== First Flame ==
+You fill the spirit cup, strike the flint set into its cap, and tip a thread of flame down to the cold wick.
+
+The wick considers the flame offered to it — one heartbeat, two — and takes hold. Blue at the root, gold at the shoulder, it climbs and steadies, and the great lens gathers it up and hurls it out over the fog like a shout. Twenty miles, Mrs Voss's logbook claimed. Tonight, four would be riches.
+
+Before settling, you unscrew the little phial wired beneath the pedestal — the keeper's emergency inch, oil kept against the worst hour — and tip it into the reservoir. Whatever the night means to ask, you mean to have answers ready.
+
+The whole drum of glass fills with a warm rotating glow. Somewhere below, waves. Somewhere out in it, a ship not yet born out of the fog. And here, this small fire, doing its enormous arithmetic.
+
+{{if visited("First Flame") == 1}}
+~ set watch = 1
+~ set nerve = nerve + 1
+~ set lamp = min(3, lamp + 1)
+{{end}}
+~ set flame = true
+
+[[Stay and learn the flame's behaviour -> The Lamp Room]]
+
+== Tin Poured ==
+You cut a fresh tin with the store knife, and oil goes into the reservoir glugging and silver, the level climbing in the gauge glass. The smell blooms — paraffin, hot metal, the particular burnt-sweetness of a lamp working — and the flame feeds and brightens as if a chair had been pulled up for it at table.
+
+Empty tin capped and set aside. Your hands smell of the whole industrial century.
+
+~ drop "tin of lamp oil"
+~ set lamp = min(3, lamp + 2)
+
+[[Stay with the light -> The Lamp Room]]
+
+== Wick Relit ==
+The tin goes in glugging and silver, and for a moment the reservoir drinks like a man after a long road. Then you set the spirit cup's flint against the wick's charred shoulder, and strike, and hold your breath.
+
+Three heartbeats of nothing. Then the flame comes back the way spring does — suddenly, and all at once — and the great lens takes it up without comment, as if the dark had been a rumour.
+
+You did not know you were holding your breath. You let it out.
+
+~ drop "tin of lamp oil"
+~ set lamp = min(3, lamp + 2)
+~ set flame = true
+~ set nerve = nerve + 1
+
+[[Stay with the light you refused to lose -> The Lamp Room]]
+
+== Wick Trimmed ==
+You take the scissors off their hook — they hang on a string, exactly where a hundred repetitions put them — and pinch the wick down past the char. The flame flares at the insult, then settles lower, bluer, harder: a working flame, the kind that burns all night without dreaming.
+
+Mrs Voss's ghost, if present, approves of the angle.
+
+~ set wickTrimmed = true
+
+[[Back a step from the heat -> The Lamp Room]]
+
+== The Gallery ==
+The gallery door fights the wind, then yields, and you're outside at the very top of the night: a railed walk circling the lantern, eighty feet above the rock, nothing between you and the Atlantic's opinion. The fog streams past horizontally. The rail is wet iron, colder than metal has any right to be, and your coat fills like a sail.
+
+Below and behind, the tower's white flank falls away to the surge. Out in the grey: nothing, everything. The Gullet bell taps its patient count somewhere under the world.
+
+{{if visited("The Gallery") > 1}}
+Your body remembers the wind's schedule now and braces half a beat early. It's almost companionable, the way it shoves you.
+{{end}}
+
+[[Lean into the wind and study the water -> Seaward View]]
+[[Back inside, ears ringing -> The Lamp Room]]
+
+== Seaward View ==
+You find the telescope on its gimbal — of course there's a telescope — and put your eye to the grey.
+
+The town's lights float below the cliff like a handful of coins spilled on black velvet. Beyond them, the harbour mouth: two leading lights, red and green, marking the safe channel with idiot cheerfulness. Past that, the fog owns everything, but fog is never truly empty. You watch it the way you'd watch a sleeping animal.
+
+{{if len(fleetLights) > 0}}
+The night has spoken so far, and you've written it down in your head:
+{{for sight in fleetLights}}
+Out in the murk: {{sight}}.
+{{end}}
+{{else}}
+Nothing moves out there yet. The fog keeps its appointments to itself.
+{{end}}
+{{if boatSeen}}
+And once, below the tower itself, where nothing should be: you remember a hull, and look again anyway.
+{{end}}
+
+[[Back from the glass, colder and wiser -> The Lamp Room]]
+
+== Second Watch ==
+You make the round of the tower like a nurse doing her ward — stair, watch room's glow, ladder — and the night takes up its first real shape around you.
+
+~ set watch = watch + 1
+
+{{if flame}}
+~ set lamp = lamp - (1 + (crackedGlass ? 1 : 0))
+{{if lamp <= 0}}
+~ set lamp = 0
+~ set flame = false
+{{end}}
+{{end}}
+
+{{if flame}}
+The lamp burns on its fresh footing, throwing its slow wheel of light. The {{WatchName(watch)}} settles over the tower like a coat being put on slowly, sleeve by sleeve. {{Gauge(lamp)}} Below, the town goes to bed by instalments, street by street, until only the harbour lights remain awake with you.
+{{else}}
+The tower is a black spine in a black fog, and the fog leans on the glass like a creditor at a door. Without the lamp the lens is only furniture — beautiful, useless. The dark has a texture now, felt rather than seen.
+{{end}}
+
+~ set bellHeard = true
+
+* Keep the watch -> The Bell Watches Too
+
+== The Bell Watches Too ==
+{{include The Bell}}
+
+{{if nerve > 0}}
+You find you can map the sound with your eyes shut: three, pause, three, patient as tide. Somewhere out under that patience, channels run between rocks sharp enough to open a hull like a letter.
+
+* Stand at the glass and listen until the counting means something -> Listening
+* Turn your back on it and check the flame -> Back to the Flame
+{{else}}
+Your legs have stopped asking permission. The iron of the stair is right there, and it asks nothing of you, and the bell will go on ringing whether you stand for it or not.
+
+* Sit down on the cold iron of the stair -> Sitting Down
+{{end}}
+
+== Listening ==
+Three strokes. The pause has a length; you learn it. The next three fit inside it like a key beginning to turn. Old Ivy's voice drifts through memory — rings hardest when the Teeth are hungry — and you understand that you are being taught something the fog already knew.
+
+When you open your eyes, the dark looks organised.
+
+[[Back to the flame and the long night -> The Lamp Room]]
+
+== Back to the Flame ==
+{{if flame}}
+{{Gauge(lamp)}} The wheel of light turns over the fog, and you settle against the warm flank of the lens housing with your coat collar up. The tower ticks and murmurs overhead as the optic turns on its bath of mercury, effortless as a planet.
+
+[[Round the catwalk, back to the light itself -> The Lamp Room]]
+{{else}}
+There is no flame to check, and checking it changes nothing. The fog presses. The bell counts. The night is very large and very willing to wait.
+
+[[Feel your way along the rail to the cold lamp -> The Lamp Room]]
+{{end}}
+
+== Third Watch ==
+The deep hours. Time goes strange in a lighthouse — measured not in clocks but in the lamp's rotations, each wheel of light a bead on a string.
+
+~ set watch = watch + 1
+
+{{if flame}}
+~ set lamp = lamp - (1 + (crackedGlass ? 1 : 0))
+{{if lamp <= 0}}
+~ set lamp = 0
+~ set flame = false
+{{end}}
+{{end}}
+
+{{if nerve > 0}}
+{{if flame}}
+{{Gauge(lamp)}}
+And then the fog delivers its cargo of trouble: a whistle, deep-throated and wrong. Close. Southeast, maybe less. It blows four shorts and stops — the sound of a ship that has lost its mathematics. The Sweet Alice, the herring boat that went out at dusk and should have been an hour home.
+
+The foghorn stands bolted by the gallery door: a brass trumpet with a hand crank and a reservoir of compressed air, dumb until someone pumps it full of breath.
+
+* (if knowsSignal) Pump the horn and answer her with the keeper's pattern -> Answer With the Pattern
+* Hold your breath and count her whistle blasts, doing nothing -> The Whistle Fades
+* (time=12, timeout -> The Whistle Fades) Throw yourself at the crank and blast blind -> Blind Blasting
+{{else}}
+In the dark, sound is all the world there is. The whistle comes out of the southeast, deep-throated and lost — four shorts, then silence, then four again. A ship out there has lost its mathematics, and there is nothing in this room to answer her with but your own two hands and a cold brass horn.
+
+* (if knowsSignal) Grope to the horn and answer her with the keeper's pattern -> Answer With the Pattern
+* Hold your breath and count her whistle blasts, doing nothing -> The Whistle Fades
+* (time=12, timeout -> The Whistle Fades) Find the crank by feel and blast blind -> Blind Blasting
+{{end}}
+{{else}}
+The hours go through you rather than past you. The stair iron is cold, and sitting is a country you no longer have the passport to leave.
+
+* Sit down on the cold iron of the stair -> Sitting Down
+{{end}}
+
+== Answer With the Pattern ==
+You pump the reservoir until your arms burn, then release the valve in the old rhythm — three long, one held — three-and-one, the hail Mrs Voss bled into her journal and her granddaughter's dreams.
+
+The fog eats the first exchange. On the second, impossibly far and impossibly near at once, a whistle answers: three-and-one. Again. Confirmation, greeting, thanks, all in four notes of pressurised air.
+
+You stand in the roaring dark grinning like a fool at a fogbank, and the fogbank, for once, grins back. The Sweet Alice has her bearings. She'll run for the harbour mouth and the leading lights, and the Teeth can starve.
+
+~ push fleetLights "the Sweet Alice answering, three-and-one, coming home"
+
+[[Stand down from the horn, arms shaking -> The Lamp Room]]
+
+== Blind Blasting ==
+You crank the horn with everything the night has left you, and the great trumpet vomits sound — crude, arrhythmic, human. Blast after blast rolls out over the water, saying nothing except HERE, HERE, WE ARE HERE, which is sometimes the whole of navigation.
+
+The distant whistle falters, stops. Then — you'd swear your life on it — a single short blast, the seaman's version of understood. Engines, somewhere, turn. The whistle draws away seaward, cautious, alive.
+
+Not elegant. Not the old code. But the Teeth go unfed tonight, and somewhere a herring skipper is calling you every blessing he knows in two languages.
+
+~ push fleetLights "a stranger's whistle, standing off seaward to think"
+
+[[Lean on the silent horn, gasping -> The Lamp Room]]
+
+== The Whistle Fades ==
+You fight the stiff crank and lose whole seconds to it — seconds the fog spends freely. By the time the first blast rolls out, the answering silence has already decided. The whistle comes once more, farther, altered in pitch: a ship turning carefully away, standing out to sea rather than gamble on a shore that answers late.
+
+She'll ride it out in open water, safe enough, furious. Nets lost, night lost, faith in the Marn light shaken.
+
+The fog closes over the sound. Your hands ache from the crank and from something that has no medical name.
+
+~ set nerve = nerve - 1
+
+[[Nothing left out there but fog. Back to the light -> The Lamp Room]]
+
+== Fourth Watch ==
+The coldest hour, when the tower's stones surrender the last of the day's heat and start drawing it back out of you with interest.
+
+~ set watch = watch + 1
+
+{{if trust >= 2 and not maraHelped}}
+Small feet on iron, out of order with your own: Mara, breathless, two tins up from the harbour on pure stubbornness. "You said ours," she pants, setting them by the ladder without asking leave. "So. Ours." She is gone down again before you have found the thank-you.
+
+~ take "tin of lamp oil", 2
+~ set maraHelped = true
+{{end}}
+
+{{if flame}}
+~ set lamp = lamp - (1 + (crackedGlass ? 1 : 0))
+{{if lamp <= 0}}
+~ set lamp = 0
+~ set flame = false
+{{end}}
+{{end}}
+
+{{if nerve > 0}}
+{{if flame and not wickTrimmed}}
+The flame has been eating its own wick all night, and now it presents the bill: a ragged orange tongue, curling, smoking, throwing shadows that lurch. The light wheel staggers out of true. In the reservoir glass, {{Gauge(lamp)}} — and the oil is not the problem. The wick is drowning in its own char.
+
+* (time=10, timeout -> The Glass Cracks) Pinch the flame, trim the wick clean, relight — fast and precise -> Steady Hands
+* Cup your bare hands round the flare-up and smother it to size -> A Burned Palm
+{{elif flame and wickTrimmed}}
+Because you trimmed the wick when the tower was quiet, the flame sits true and blue in the hour that tries every flame. The wheel turns smooth. {{Gauge(lamp)}} This is the hour Mrs Voss's logbook calls the honest dark — no drama in it, just keeping.
+
+* Watch an honest hour go by -> An Easy Hour
+{{else}}
+The dark hour passes through an unlit tower like a procession through an empty church. The bell counts. The stones tick as they cool. You stamp your feet on the watch room floor and listen to the tower digest the night.
+
+* See the cold hour through -> An Easy Hour
+{{end}}
+{{else}}
+Cold has gotten into the marrow's counting-house. Standing has become a theory; the stair iron is a fact.
+
+* Sit down on the cold iron of the stair -> Sitting Down
+{{end}}
+
+== Steady Hands ==
+Snuffer over the chimney. Flame out. The dark slams in, total, and you work by touch and memory — scissors off the string, pinch the wick, one clean cut, char flicked away with a fingernail. Strike. Touch the spirit cup's small flame to the wick's fresh shoulder.
+
+It catches on the first try, blue and level, and the lens takes it up mid-stride as if the light had never stumbled. Through the whole operation your hands were someone else's — a keeper's hands, borrowed for the occasion.
+
+You give them back reluctantly.
+
+~ set nerve = nerve + 1
+
+[[Watch the flame settle into blue -> The Lamp Room]]
+
+== A Burned Palm ==
+You clap both hands round the rampaging flame like a man catching a wasp. The heat goes through you in a white sheet — palm heels, fingertips, the web of your thumbs — and when you snatch them back the flame has shrunk to something survivable and your hands are singing a bright, stupid harmony of pain.
+
+You cradle them, blowing, eyes streaming, and that is when the glass speaks up.
+
+[[Cradle your hands and follow the sound -> The Glass Cracks]]
+
+== The Glass Cracks ==
+It is not a loud sound. A tick, then a finer tick — the sound frost makes on a pond, or a watch deciding to stop. You turn in time to watch a hairline open across the lower seaward pane, patient as handwriting, running a foot and stopping as though considering.
+
+Heat below, cold outside, and the flaw blooming where the two arguments meet. It will hold — probably. Mrs Voss's logbook, in a marginal note you half remember: *A cracked pane can be borne. It must be watched like a rival.*
+
+The wind finds the crack and plays it, all night, very softly.
+
+~ set crackedGlass = true
+~ set nerve = nerve - 1
+
+[[Listen to the flaw tick as it cools -> The Lamp Room]]
+
+== An Easy Hour ==
+No crisis comes. You discover that this is its own event: the lamp fed and trimmed, the wheel turning, the cold held at the glass like a well-trained dog. You boil water on the spirit stove and drink tea scalding enough to hurt, and feel the tower breathing round you — mercury whispering in its bath, the clockwork escapement ticking off the turns.
+
+Sometime in that hour, without ceremony, the tower stops being Mrs Voss's and starts being yours. Nobody votes. It simply happens, the way dawn does.
+
+[[Turn with the light toward morning -> The Lamp Room]]
+
+== Fifth Watch ==
+~ set watch = watch + 1
+
+The {{WatchName(watch)}} — the hour of the grey edge, when the fog develops a faint luminosity like the memory of light, and the night begins clearing its desk.
+
+{{if flame}}
+~ set lamp = lamp - (1 + (crackedGlass ? 1 : 0))
+{{if lamp <= 0}}
+~ set lamp = 0
+~ set flame = false
+{{end}}
+{{end}}
+
+~ set boatSeen = true
+
+{{if nerve > 0}}
+It comes up out of the fog below the tower — close, closer than any honest vessel has a right to be. A hull, dark, undecked lights, riding the slack water under the cliff where only wreckage and gulls go. No bell. No whistle. It sits there in the tower's own shadow like a question asked in an empty church.
+
+The Gullet bell, for the first time all night, misses a stroke.
+
+* (if has("storm lantern") and nerve >= 4) Go down toward the dinghy at the slip -> At The Slip
+* (if knowsSignal) Send three-and-one down the horn toward her -> Horn In The Dark
+* (once, if flame) Shutter the great light: one deliberate, unmistakable flash -> One White Flash
+* Stay at your post and watch it out -> Holding the Light
+{{else}}
+Something moves below the tower, where nothing should move. You register it distantly, like weather happening to another county. The stair iron is right there. The stone is very kind about letting you stay down.
+
+* Sit down on the cold iron of the stair -> Sitting Down
+{{end}}
+
+== Horn In The Dark ==
+You pump the foghorn full of breath and lean into the old rhythm — three long, one held — sending the Voss hail down through the fog to the hull that will not speak. Three-and-one. The dark drinks it. You give it again, and your own voice comes back off the cliff with a hollow doubled sound, as if the tower were answering itself.
+
+Nothing. No whistle, no light, no oar-creak. The bell misses another stroke.
+
+Whatever lies at anchor below you has heard every hail this coast can make and declines them all. The silence it leaves behind is a shaped thing, sized exactly like a doorway.
+
+~ push fleetLights "three-and-one, sent down to the dark hull — and nothing came back"
+~ set nerve = nerve - 1
+
+[[Back from the horn, colder than the night -> The Lamp Room]]
+
+== One White Flash ==
+You rig the shutter blind across the seaward sector — Mrs Voss's own arrangement, a hinged board on a pulley — and draw it once. The great lens releases a single pillar of white, solid as a monument, stabbing down through the fog onto the dark hull.
+
+Every soul aboard that boat, if there are souls aboard that boat, now knows the light above them saw them. Knows it is watched. The pillar dies. The ordinary wheel resumes.
+
+The hull slides backward into the fog with no wake worth the name. It does not run for the channel; it simply ceases, the way a rumour ceases.
+
+~ push fleetLights "one white flash from the dark hull below, then nothing"
+
+[[Whatever it was, it is gone -> The Lamp Room]]
+
+== Holding the Light ==
+You stay. Whatever the dark hull wants — castaways, smugglers, the drowned practising their drills — it will do it in front of a kept light, not behind an empty one. That is the whole of the job, you realise. Not heroics. Presence.
+
+The bell resumes its count, one stroke late, like a cough after an awkward silence. Slowly, without hurry, the hull fades backwards into the grey until the fog owes you an apology it will never pay.
+
+You feel — steadier. Chosen by the keeping, in some small way, rather than assigned to it.
+
+~ set nerve = nerve + 1
+
+[[The bell rings the hour out. Back to the lamp -> The Lamp Room]]
+
+== At The Slip ==
+The slip is a slick descent of wet granite, and the dinghy — the station's ancient punt, upside down on trestles — waits with the patience of an argument you have been having with yourself all the way down. Above and behind you the tower stands; below, the dark hull sits its slack water, close enough now that you can hear the small wet sounds of a boat breathing at anchor.
+
+Your reason remains up on the gallery, waving both arms.
+
+* Launch her and row out to the hull -> Down to the Boat
+* Turn back. The light comes first -> Holding the Light
+
+== Down to the Boat ==
+You launch her with more noise than skill, and the punt argues only briefly before surrendering to the tide. Oars, rowlocks, the whole ritual of small craft performed by feel while your reason stands on the gallery above, waving its arms.
+
+You row. The fog takes the tower in two strokes. The bell takes over as your only landmark, ringing and ringing, three and pause and three, and the dark hull waits ahead, patient as its own reflection.
+
+[[Ship the oars as the hull rises black ahead -> Into the Fog]]
+
+== Into the Fog ==
+Against the hull, scale betrays you: it is bigger than the fog permitted, old, tar-black, gunwale worn round as a coin's rim. There is no name on the stern — or rather, there is a place where a name was, painted out with paint, deliberately, the way you'd shut a door on a room you didn't want seen.
+
+Your knuckles touch the hull. It is not cold. That is the detail your mind will return to, later, in brighter rooms: not cold. The fog lies along the water without moving, and the bell has gone quiet everywhere, as if the whole sea were holding one breath.
+
+A rope ladder hangs against the hull, wet, inviting, tied off at the top by hands you cannot see.
+
+[[Take hold of the wet rope -> The Derelict]]
+
+== The Derelict [ending] ==
+The deck is empty.
+
+That is the first fact and it takes a while to be believed. Empty, and yet recently lived-in in the way a church is: a cold stove, dished by fire; a mug with tea-stain rings like tree rings, many of them; hammock-hooks along the beams, bare. A ship's bell hangs amidships, green with age, its clapper bound fast with wire so that it cannot ring. Somebody went to real trouble to silence it, and you understand, standing there in the fog with your hand still on the rail, that you have just boarded the reason the Gullet buoy rings hardest when the Teeth are hungry. It rings for crews that cannot.
+
+How you come ashore is a blur you will keep: the fog lifting the punt like a thought, the bell resuming mid-stroke, the tower's dark bulk guiding your oars. The coastguard finds the derelict at noon, anchored fast and deserted, logged adrift since before the war. They find your story harder to file.
+
+As for the light: for forty minutes that night, Marn Point stood black. The Meridian, already past on the far tide, never knew. The town knows. The town has always known there are nights when the bell must be answered, and now, whether you like it or not, you are one of the people who knows too.
+
+THE END
+
+== The Grey Hour ==
+Morning does not arrive so much as leak in — the fog turning from charcoal to pewter, the bell's count growing embarrassed, the world admitting shapes again. This is the hour the Meridian makes her run, if she's made her night intact. This is the hour the light must still be speaking.
+
+~ set watch = watch + 1
+
+{{if flame}}
+~ set lamp = lamp - (1 + (crackedGlass ? 1 : 0))
+{{if lamp <= 0}}
+~ set lamp = 0
+~ set flame = false
+{{end}}
+{{end}}
+
+{{if flame}}
+It is. Against every odds the night stacked, the flame rides its reservoir, and the great wheel sweeps the brightening fog one last watch around. {{Gauge(lamp)}} Far below, the harbour bell begins to ring altogether — boats' engines, gulls, the town waking to count its vessels home.
+
+* Go down to meet the morning -> First Light
+{{elif has("signal flare") or has("box of matches")}}
+The tower stands dark at the worst hour it has ever stood dark, and the fog outside has thinned enough to be ashamed of itself. Whatever the night took from you, the morning wants an accounting.
+
+But you are not empty-handed. Not quite.
+
+* Consider what you have left -> The Last Ember
+{{else}}
+The tower stands dark at the worst hour it has ever stood dark, and you have nothing left to offer it — no oil, no flare, no fire, no trick. Only your eyes, and the grey water showing between the teeth of the fog.
+
+* Stand at the black glass and watch -> Wreck of the Meridian
+{{end}}
+
+== First Light ==
+They come up the path in ones and twos as the fog dismantles itself: Dune wrapped in a muffler like a disputed treaty, Ivy with a flask, fishermen with the particular walk of men who have been paid in weather. Behind them, out on the water, the fleet straggles home through the last rags of mist, nets dripping gold in the new sun.
+
+Nobody says the obvious — that the light burned, and they are looking at it, and here they all are alive to look. Instead the harbour carries on being itself, loudly.
+
+{{if len(fleetLights) > 0}}
+You find yourself telling them what the night said, and the night's vocabulary turns out to translate:
+{{for sight in fleetLights}}
+Out there: {{sight}}.
+{{end}}
+{{end}}
+
+Mara reaches you at the tower door, cheeks wet, not bothering to blame the wind. Dune coughs his way through something official about the relief boat and the new appointment, and then looks at you over the top of it, waiting — the parish's question mark.
+
+* Walk down to the harbour with the others -> The Quay At Dawn
+* Take the keeping of the light -> The Keeping
+
+== The Quay At Dawn ==
+The morning boat is already at her moorings, funnel breathing, taking on crates of fish and one crate of hens who did not expect to travel. Dune walks you down as far as the gangway, coughing, and says nothing for the length of it, which from Dune is a speech.
+
+At the bottom he stops. "Parish'll want an answer by post," he manages. "Or you can give it me now and spare the stamp."
+
+Out past the mole, the Meridian lies at anchor, riding out her tide with her lights burning and her whistle silent, like a dog that has been shouted at by the sea and does not care to discuss it. The gulls wheel over all of it, insolent with morning. The boat's mate calls five minutes.
+
+* Catch the morning boat home -> The Morning Boat
+* Climb back up the cliff road and take the keeping -> The Keeping
+
+== The Keeping [ending] ==
+You tell Dune the relief boat can carry mail, and that the parish would be wasting postage sending anyone else. Ivy laughs loud enough to startle gulls off the mizzen. Mara doesn't laugh at all; she goes up the spiral ahead of you, quick as a wren, to show you where her grandmother kept the tea.
+
+It is not a romantic life. You learn it the way you learn a face: the third step's lie, the wick's moods, the bell's vocabulary, winter nights with the fog pressing the glass like a great grey animal wanting in. You keep the journal going in the same copperplate-adjacent scrawl. *A gull has trained its children to blackmail me,* you write, in October. *Paying them in biscuit. The alternative is negotiation.*
+
+And every evening at dusk you sit a moment on the step, letting the tower get used to your weight, before you climb to feed the enormous, unsentimental guest its supper of light. Some nights, in the pause between the third stroke and the next three, you would swear the bell was learning your name.
+
+THE END
+
+== The Morning Boat [ending] ==
+You shake every hand on the quay, and mean it, and are on the morning boat before the fog finishes leaving. Dune takes the brass key back with the nod of a man filing you under honourable. Mara stands on the ferry steps to see you off, and does not wave, and does not look away either.
+
+The harbour falls astern. The town folds itself into the coastline like a letter going back in its envelope, and then the tower goes too — white, brief, crowned with its impossible lamp, already dark now, waiting for Monday's stranger.
+
+You watch it out of sight. Somewhere behind you the Gullet bell is ringing three and pausing and ringing three, patient as tide, and you know that for the rest of your life, in landlocked rooms, on still afternoons, some far-off bell will put that rhythm in your ear — and you will look up from whatever you are doing, counting, before you can stop yourself, three strokes and a breath, keeping somebody's watch.
+
+THE END
+
+== The Last Ember ==
+The lamp room at dawn without its flame is a chapel with the god away. The lens stands ready to serve a fire that isn't there. Out seaward, the fog is shredding — and through the shred, far off but closing, comes the deep-throated complaint of one steam whistle: the Meridian, right on her tide, blind as ever, trusting the Marn light the way sailors have trusted it for fifty years.
+
+She cannot see the shore. In minutes she will begin to see it all at once, and the Teeth are in the way.
+
+* (if has("signal flare")) Fire the red star high over the water -> The Red Flare
+* (if has("box of matches")) Build a fire on the gallery with the spare bench and the oiled canvas -> A Pyre of Spares
+
+== The Red Flare [ending] ==
+The pistol kicks like a live thing. The star goes up with a hiss you feel in your teeth, and bursts at the top of its arc: a red bloom the size of a harvest moon, hanging over the water, dyeing the whole underside of the fog.
+
+Silence — one full wave-length of it. Then the Meridian's whistle erupts, four shorts, frantic, alive: helm going over, engines full astern, a quarter mile of steel remembering it has business elsewhere. The red star sinks, gutters, dies. In its after-image you can just make out her funnel, standing off, safe, swearing.
+
+She anchors till full light. The coastguard launches. Dune meets you on the quay with a face like a dropped pie — fury, relief and awe fighting for the window — and finally manages: "Parish owes you a flare." Behind him the tower stands black against the morning, and every soul in town is looking at it, and then at you, doing new arithmetic about the price of a light.
+
+THE END
+
+== A Pyre of Spares [ending] ==
+You work like a man possessed, because you are, mildly. Spare bench out of the watch room. Oiled canvas from the stores. Paraffin, the last inch of a tin, splashed generous. The gallery flags take the heap, the match goes in, and the fire takes hold with a roar that owes nothing to dignity.
+
+Flame and black smoke climb the tower's crown like ivy in a hurry. It is not the Marn light. It is not coded, rhythmic, or lawful — it is a bonfire eighty feet up on a fog-wrapped rock, and it says HERE in the only alphabet fire has ever known.
+
+The Meridian's whistle shrieks — doubled, then doubled again — and through the flags of burning canvas you watch her sheer off, broadside-on and terrified, standing out to sea with her whistle cursing in steam. Safe. Furious. Alive.
+
+By full light the gallery is scorched, your eyebrows are a rumour, and the coastguard's launch is full of men trying to decide whether to arrest you or knight you. Dune solves it with tea. The tower wears its burn scars like a service medal, and Mrs Voss's logbook, when you dare open it, seems almost to chuckle: *The light must burn. It does not stipulate the fuel.*
+
+THE END
+
+== Wreck of the Meridian [ending] ==
+You hear her before you see her — the whistle, close, confident, then the confidence failing note by note as the fog gives up her secret too late. Reverse. Reverse. The sea's voice changes, goes gravelly, triumphant.
+
+The impact is not the crash of pictures. It is a long, grinding intimacy, rock and iron getting to know each other, lasting far longer than you could have imagined and ending in a silence that is worse, because it is only the beginning of the noise.
+
+Rockets go up from her after a while — red, green, hopeless, answering nothing. Boats put out from the town in the grey morning, oars double-banked, and you go down the zigzag with them because your body is still capable of obedience. What the tide brings in that day, and the days after, the town carries up the cliff road in silence: pit props, hatch covers, men.
+
+They do not blame you. That is the finding, later, in the room with the charts and the coughing: the light had oil it never received, a keeper newly buried, and a fog like a lid. But blame is a harbour, and you will never anchor there again. Fifty-one years the light spoke, and on the one night it fell to you, the sea learned its name.
+
+THE END
+
+== Sitting Down [ending] ==
+You sit. The iron takes your weight without commentary, and the cold comes up through your coat like truth through wine. Above you, wherever above is, the lamp waits for hands that no longer answer to their owner's name. The bell rings. You count the strokes because counting is easier than standing, and somewhere past thirty your count loses its place and does not come back.
+
+Hammering wakes you: fists on the tower door, voices, Mara's voice cracking on your name. They find you on the stair between the watch room and the lamp, folded like a dropped puppet, and her face when she sees you is a thing you will dress beside every morning for years: not anger. Arithmetic. She counts you, finds you whole, and goes past you up the ladder without a word.
+
+She keeps the light. Of course she keeps the light — her and the flask of tea and two tins she hauled up the liar step by main strength while the fog stood aside to watch. The Meridian comes home at dawn to a proper wheel of Voss light, and the town cheers its boats, and you walk to the afternoon ferry with your collar up, carrying the lightest luggage in the harbour: a night you sat out, in a tower that needed everybody but you.
+
+THE END
+
+== The Bell ==
+Out under the fog the Gullet bell begins again — three strokes, a pause, three more. Patient as tide. It is only a buoy, a bell in a cage on a rocking iron skirt, worked by the sea's own shoulder. It has no message and no malice. It counts because counting is all it can do for anyone, and tonight, with the Teeth lying hungry under the running tide, its counting sounds less like weather and more like company: the only other thing out here staying awake on purpose.
+
+== Gauge(level) ==
+{{if level >= 3}}
+The reservoir stands brimming, the gauge glass trembling full — oil to spare, oil to waste, a night's worth of argument settled in advance.
+{{elif level == 2}}
+Two fingers of oil ride in the gauge glass, level and unhurried as a sleeping pulse.
+{{elif level == 1}}
+A single finger of oil shivers at the bottom of the gauge, spending itself with visible honesty.
+{{else}}
+The gauge glass is dry, streaked where the oil used to live — an empty larder, a cleared throat.
+{{end}}
+
+== WatchName(n) ==
+{{if n == 1}}first{{elif n == 2}}second{{elif n == 3}}third{{elif n == 4}}fourth{{elif n == 5}}fifth{{else}}sixth{{end}} watch
